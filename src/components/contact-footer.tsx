@@ -163,7 +163,7 @@ export default function ContactFooter() {
                   <rect x="2" y="9" width="4" height="12" />
                   <circle cx="4" cy="4" r="2" />
                 </ContactLink>
-                <ContactLink href="mailto:contact.fraawdrinn@gmail.com" label={t('email')}>
+                <ContactLink href="mailto:chatoui.wael40@gmail.com" label={t('email')}>
                   <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </ContactLink>
                 <ContactLink href="tel:+33618704659" label={t('phone')}>

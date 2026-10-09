@@ -2,7 +2,7 @@
   "hero": {
     "greeting": "Salut, moi c'est",
     "name": "Wael Chatoui",
-    "tagline": "Transformer les idées en interfaces",
+    "tagline": "Full-Stack Product Engineer — SaaS, Automatisations & Workflows IA",
     "cta": "Voir mon travail",
     "contact": "Me contacter"
   },
@@ -14,9 +14,9 @@
   },
   "about": {
     "title": "À propos",
-    "p1": "Étudiant en Common Core à 42 Paris, animé par la curiosité et une passion profonde pour créer des choses qui vivent sur les écrans.",
-    "p2": "Je construis des apps web et mobile modernes, du MVP rapide au produit scalable. Freelance depuis 2024, passionné par l'IA, les SaaS et le code propre.",
-    "p3": "Quand je ne code pas, j'apprends probablement quelque chose de nouveau, je bricole un side project, ou je plonge dans les dernières nouveautés tech."
+    "p1": "Développeur Full-Stack & IA, étudiant à 42 Paris. J'aide les startups, agences et fondateurs à concrétiser des produits solides et rapides à shipper.",
+    "p2": "Spécialisé en Next.js, TypeScript, Python, Supabase et intégrations d'IA (APIs LLM, agents autonomes, scraping). Freelance rigoureux focalisé sur l'architecture propre et l'impact produit.",
+    "p3": "Actif dans l'écosystème tech parisien : hôte des Tech Socials Paris et membre d'AI Tinkerers."
   },
   "skills": {
     "title": "Compétences & Outils",
