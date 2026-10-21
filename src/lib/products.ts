@@ -23,8 +23,8 @@ export function getProducts(english: boolean) {
       description: english ? 'Bring RSS research, saved articles, sourced notes and an editorial calendar into one writing workspace.' : 'Réunir veille RSS, articles enregistrés, notes sourcées et planning éditorial dans un espace de rédaction.',
       audience: english ? 'For independent writers and editorial research.' : 'Pour la rédaction indépendante et la préparation de sujets.',
       features: english ? ['RSS reading and saved articles', 'Notes that keep references separate from your own angle', 'Editorial planning and document exports'] : ['Lecture RSS et articles enregistrés', 'Notes séparant les références de votre propre angle', 'Planning éditorial et exports de documents'],
-      href: campaignUrl('https://rss-intern-tool.vercel.app', 'la-redaction'),
-      cta: english ? 'Discover La rédaction' : 'Découvrir La rédaction',
+      href: campaignUrl('https://rss-intern-tool.vercel.app', 'la-redaction', '/demo'),
+      cta: english ? 'Try the demo' : 'Essayer la démo',
     },
   ];
 }

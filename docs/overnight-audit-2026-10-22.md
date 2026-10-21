@@ -33,3 +33,7 @@ Le formulaire contrôle les types et limites, distingue JSON invalide et service
 - Les UTMs ne sont pas un outil d’analytics. Aucun tracker additionnel n’a été installé.
 - Le domaine`.ovh` doit être rétabli avant de redevenir canonique. Le domaine Vercel actif est confirmé dans le navigateur.
 - Les fonctions d’inscription, d’abonnement ou de démo des autres produits ne sont annoncées qu’après leur propre recette.
+
+## Mise à jour du parcours La Rédaction
+
+Après confirmation du déploiement `739d989` et vérification dans Chrome de la démo publique, le bouton du portail pointe directement vers `/demo` avec les UTMs existants. Libellés : « Essayer la démo » et « Try the demo ». Cette démo est fictive, sans compte; le portfolio ne promet pas d'abonnement ni d'inscription ouverts. Les fonctionnalités décrites restent celles déjà vérifiées.
