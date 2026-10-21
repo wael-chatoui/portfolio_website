@@ -8,7 +8,7 @@ export default function Hero() {
   const t = useTranslations('hero');
 
   return (
-    <section id="hero" className="snap-section relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section id="hero" className="snap-section relative min-h-screen flex items-center justify-center overflow-hidden py-28 lg:py-20">
       {/* Subtle radial gradient */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(255,255,255,0.03)_0%,_transparent_70%)]" />
 
@@ -63,19 +63,19 @@ export default function Hero() {
               className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
             >
               <a
-                href="#projects"
+                href="#contact"
                 className="cursor-pointer inline-flex items-center justify-center px-7 py-3.5 bg-text text-bg font-body text-sm font-medium rounded-full hover:bg-accent transition-colors duration-300 no-underline"
               >
-                {t('cta')}
+                {t('contact')}
                 <svg className="ml-2 w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
               </a>
               <a
-                href="#contact"
+                href="#projects"
                 className="cursor-pointer inline-flex items-center justify-center px-7 py-3.5 border border-border text-text-muted font-body text-sm font-medium rounded-full hover:text-text hover:border-text-subtle transition-all duration-300 no-underline"
               >
-                {t('contact')}
+                {t('cta')}
               </a>
             </motion.div>
           </div>
@@ -99,6 +99,7 @@ export default function Hero() {
                   fill
                   className="object-cover"
                   priority
+                  sizes="(min-width: 1280px) 384px, (min-width: 1024px) 320px, (min-width: 640px) 288px, 256px"
                 />
               </div>
 

@@ -31,7 +31,7 @@ export default function About() {
 
           {/* Content */}
           <div className="lg:col-span-8 space-y-6">
-            {['p1', 'p2', 'p3'].map((key, i) => (
+            {['p1'].map((key, i) => (
               <motion.p
                 key={key}
                 initial={{ opacity: 0, y: 20 }}
@@ -44,22 +44,16 @@ export default function About() {
               </motion.p>
             ))}
 
-            {/* Status badge */}
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.4 }}
-              className="flex items-center gap-3 pt-4"
-            >
-              <span className="relative flex h-2.5 w-2.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-400" />
-              </span>
-              <span className="text-text-subtle text-sm font-body">
-                42 Paris - Common Core
-              </span>
-            </motion.div>
+            <div className="divide-y divide-border">
+              {(t.raw('offers') as { title: string; description: string; proof: string; href: string }[]).map((offer) => (
+                <article key={offer.title} className="py-6 first:pt-1">
+                  <h3 className="font-display text-xl font-semibold mb-2">{offer.title}</h3>
+                  <p className="text-text-muted leading-relaxed mb-3">{offer.description}</p>
+                  <a href={offer.href} className="text-sm underline underline-offset-4 hover:text-text-muted">{offer.proof}</a>
+                </article>
+              ))}
+            </div>
+            <p className="text-sm text-text-muted leading-relaxed">{t('p3')}</p>
           </div>
         </div>
       </div>

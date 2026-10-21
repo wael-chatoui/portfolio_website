@@ -21,7 +21,7 @@ export default {
         text: {
           DEFAULT: '#fafafa',
           muted: '#a1a1aa',
-          subtle: '#71717a',
+          subtle: '#8b8b95',
         },
         accent: {
           DEFAULT: '#e4e4e7',

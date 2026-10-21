@@ -2,16 +2,20 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
+import { useLocale } from 'next-intl';
 
 const sections = [
   { id: 'hero', label: 'Hero' },
   { id: 'about', label: 'About' },
   { id: 'skills', label: 'Skills' },
   { id: 'projects', label: 'Projects' },
+  { id: 'products', label: 'Products' },
   { id: 'contact', label: 'Contact' },
 ];
 
 export default function SectionStepper() {
+  const english = useLocale() === 'en';
+  const labels: Record<string, string> = english ? { hero: 'Home', about: 'Services', skills: 'Skills', projects: 'Work', products: 'Products', contact: 'Contact' } : { hero: 'Accueil', about: 'Prestations', skills: 'Compétences', projects: 'Réalisations', products: 'Produits', contact: 'Contact' };
   const [activeSection, setActiveSection] = useState('hero');
   const [visible, setVisible] = useState(false);
 
@@ -64,7 +68,7 @@ export default function SectionStepper() {
   const handleClick = (id: string) => {
     const el = document.getElementById(id);
     if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
+      el.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
     }
   };
 
@@ -78,15 +82,16 @@ export default function SectionStepper() {
       {/* Vertical line behind dots */}
       <div className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-px bg-border/30" />
 
-      {sections.map((section, i) => {
+      {sections.map((section) => {
         const isActive = activeSection === section.id;
 
         return (
           <button
             key={section.id}
             onClick={() => handleClick(section.id)}
-            className="relative group flex items-center py-3 cursor-pointer bg-transparent border-none outline-none"
-            aria-label={`Go to ${section.label}`}
+            className="relative group flex items-center min-w-11 min-h-11 justify-center cursor-pointer bg-transparent border-none rounded-full"
+            aria-label={labels[section.id]}
+            aria-current={isActive ? 'location' : undefined}
           >
             {/* Dot / indicator */}
             <div className="relative z-10">
@@ -120,7 +125,7 @@ export default function SectionStepper() {
               }}
               className="absolute left-full ml-4 text-xs font-body tracking-wider uppercase whitespace-nowrap text-text-muted group-hover:opacity-100 transition-all duration-300 pointer-events-none"
             >
-              {section.label}
+              {labels[section.id]}
             </motion.span>
           </button>
         );

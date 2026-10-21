@@ -1,47 +1,89 @@
 {
   "hero": {
-    "greeting": "Hey, I'm",
+    "greeting": "Hi, I’m",
     "name": "Wael Chatoui",
-    "tagline": "Full-Stack Product Engineer — SaaS, Automation & AI Workflows",
-    "cta": "See my work",
-    "contact": "Get in touch"
+    "tagline": "Freelance product engineer for business tools, CRM, SaaS and AI automation.",
+    "cta": "View projects",
+    "contact": "Discuss your project"
   },
   "nav": {
-    "about": "About",
+    "about": "Services",
     "skills": "Skills",
     "projects": "Projects",
-    "contact": "Contact"
+    "contact": "Discuss your project",
+    "menu": "Menu",
+    "close": "Close menu",
+    "label": "Main navigation",
+    "skip": "Skip to content",
+    "home": "Wael Chatoui, home",
+    "switchLocale": "Read this site in French",
+    "products": "Products"
   },
   "about": {
-    "title": "About me",
-    "p1": "Full-Stack & AI Product Engineer and student at 42 Paris. I help startups, agencies, and technical founders ship robust, high-impact products.",
-    "p2": "Specialized in Next.js, TypeScript, Python, Supabase, and AI integrations (LLM APIs, autonomous agents, web scraping). Dedicated to clean architecture and shipping velocity.",
-    "p3": "Active in the Paris tech ecosystem: host of Tech Socials Paris and member of AI Tinkerers Paris."
+    "title": "From a business need to a working tool",
+    "p1": "A CRM to structure, an internal tool to build, or a workflow to automate? We define the scope and deliverables before starting.",
+    "p2": "On Miria.ai, I built chat flows, subscriptions and CRM workflows. My lead generation CRM and Attio Bridge also show how I connect data, interfaces and business tools.",
+    "p3": "Next.js, React, TypeScript, Python and PostgreSQL/Supabase. Remote work, with possible visits in Paris. Fixed-scope projects quoted after a first discussion.",
+    "offers": [
+      {
+        "title": "Business tools and CRM",
+        "description": "Centralize contacts, files and operations in an interface built around your team.",
+        "proof": "See my internal CRM",
+        "href": "#project-leads"
+      },
+      {
+        "title": "SaaS and product features",
+        "description": "Build a product flow, dashboard, API integration or subscription feature.",
+        "proof": "See my work on Miria.ai",
+        "href": "#project-miria"
+      },
+      {
+        "title": "Automation and AI workflows",
+        "description": "Connect your tools and automate data collection, qualification and CRM synchronization.",
+        "proof": "See Attio Bridge",
+        "href": "#project-attio"
+      }
+    ]
   },
   "skills": {
     "title": "Skills & Tools",
     "subtitle": "Technologies I work with daily"
   },
   "projects": {
-    "title": "Featured Projects",
-    "viewAll": "View all projects",
-    "viewProject": "View project"
+    "title": "Projects and delivered work",
+    "viewAll": "View GitHub repositories",
+    "viewProject": "View project",
+    "intro": "Selected work, with the problem addressed and the scope of my delivery. Private source code stays private.",
+    "problem": "The need",
+    "delivery": "My delivery",
+    "technologies": "Technologies",
+    "privateCode": "Private source code.",
+    "discuss": "Discuss this project",
+    "also": "Other work"
   },
   "contact": {
-    "title": "Conversation comes first",
-    "subtitle": "That's often where good things begin.",
-    "formName": "Your name",
-    "formEmail": "Your email",
-    "formMessage": "Your message...",
-    "formSend": "Send message",
-    "formSending": "Sending...",
-    "formSuccess": "Message sent successfully!",
+    "title": "Discuss your project",
+    "subtitle": "Describe the result you need and your timeline. We can then clarify the scope in an initial conversation.",
+    "formName": "Name",
+    "formEmail": "Work email",
+    "formMessage": "E.g. connect our CRM to our support tool by the end of November. Add your stack and budget range if known…",
+    "formSend": "Send project brief",
+    "formSending": "Sending project brief…",
+    "formSuccess": "Your brief was accepted by the email service. I will get back to you by email.",
     "email": "Email",
     "phone": "Phone",
-    "cv": "Download CV"
+    "cv": "Download CV",
+    "formMessageLabel": "Project and timeline",
+    "formError": "Your project brief could not be sent. Try again or contact me by email.",
+    "formPrivacy": "Your information is used only to respond to your request.",
+    "directEmail": "Prefer email? Write to me directly."
   },
   "footer": {
     "rights": "All rights reserved.",
     "madeWith": "Built with"
+  },
+  "meta": {
+    "title": "Wael Chatoui | Freelance developer, CRM, SaaS and AI",
+    "description": "Business tools, CRM, SaaS and AI automation with Next.js, TypeScript and Python. Explore Wael Chatoui’s work and discuss a fixed-scope project."
   }
 }

@@ -1,47 +1,89 @@
 {
   "hero": {
-    "greeting": "Salut, moi c'est",
+    "greeting": "Bonjour, je suis",
     "name": "Wael Chatoui",
-    "tagline": "Full-Stack Product Engineer — SaaS, Automatisations & Workflows IA",
-    "cta": "Voir mon travail",
-    "contact": "Me contacter"
+    "tagline": "Développeur freelance : outils métier, CRM, SaaS et automatisation IA.",
+    "cta": "Voir les projets",
+    "contact": "Parler du projet"
   },
   "nav": {
-    "about": "À propos",
+    "about": "Prestations",
     "skills": "Compétences",
     "projects": "Projets",
-    "contact": "Contact"
+    "contact": "Parler du projet",
+    "menu": "Menu",
+    "close": "Fermer le menu",
+    "label": "Navigation principale",
+    "skip": "Aller au contenu",
+    "home": "Wael Chatoui, accueil",
+    "switchLocale": "Lire ce site en anglais",
+    "products": "Produits"
   },
   "about": {
-    "title": "À propos",
-    "p1": "Développeur Full-Stack & IA, étudiant à 42 Paris. J'aide les startups, agences et fondateurs à concrétiser des produits solides et rapides à shipper.",
-    "p2": "Spécialisé en Next.js, TypeScript, Python, Supabase et intégrations d'IA (APIs LLM, agents autonomes, scraping). Freelance rigoureux focalisé sur l'architecture propre et l'impact produit.",
-    "p3": "Actif dans l'écosystème tech parisien : hôte des Tech Socials Paris et membre d'AI Tinkerers."
+    "title": "Du besoin métier à l’outil livré",
+    "p1": "Un CRM à structurer, un outil interne à créer ou un processus à automatiser ? Nous définissons le périmètre et les livrables avant de démarrer.",
+    "p2": "Sur Miria.ai, j’ai développé des parcours de chat, des abonnements et des workflows CRM. Mon CRM de prospection et Attio Bridge montrent aussi comment je relie données, interfaces et outils métier.",
+    "p3": "Next.js, React, TypeScript, Python et PostgreSQL/Supabase. À distance, avec interventions possibles à Paris. Prestations au forfait, chiffrées après un premier échange.",
+    "offers": [
+      {
+        "title": "Outils métier et CRM",
+        "description": "Centraliser contacts, dossiers et opérations dans une interface adaptée à votre équipe.",
+        "proof": "Voir mon CRM interne",
+        "href": "#project-leads"
+      },
+      {
+        "title": "SaaS et fonctionnalités produit",
+        "description": "Construire un parcours, un dashboard, une intégration API ou un abonnement.",
+        "proof": "Voir mon travail sur Miria.ai",
+        "href": "#project-miria"
+      },
+      {
+        "title": "Automatisation et workflows IA",
+        "description": "Connecter vos outils, automatiser la collecte, la qualification et la synchronisation CRM.",
+        "proof": "Voir Attio Bridge",
+        "href": "#project-attio"
+      }
+    ]
   },
   "skills": {
     "title": "Compétences & Outils",
     "subtitle": "Les technologies que j'utilise au quotidien"
   },
   "projects": {
-    "title": "Projets phares",
-    "viewAll": "Voir tous les projets",
-    "viewProject": "Voir le projet"
+    "title": "Projets et réalisations",
+    "viewAll": "Voir les dépôts GitHub",
+    "viewProject": "Voir le projet",
+    "intro": "Une sélection de réalisations, avec le besoin de départ et le périmètre livré. Les codes sources privés restent confidentiels.",
+    "problem": "Le besoin",
+    "delivery": "Ma réalisation",
+    "technologies": "Technologies",
+    "privateCode": "Code source privé.",
+    "discuss": "Échanger sur ce projet",
+    "also": "Autres réalisations"
   },
   "contact": {
-    "title": "La conversation d'abord",
-    "subtitle": "C'est souvent là que les bonnes choses commencent.",
-    "formName": "Votre nom",
-    "formEmail": "Votre email",
-    "formMessage": "Votre message...",
-    "formSend": "Envoyer le message",
-    "formSending": "Envoi...",
-    "formSuccess": "Message envoyé avec succès !",
+    "title": "Parler du projet",
+    "subtitle": "Décrivez le résultat attendu et votre échéance. Nous cadrerons ensuite le besoin lors d’un premier échange.",
+    "formName": "Nom",
+    "formEmail": "Email professionnel",
+    "formMessage": "Ex. : connecter notre CRM à notre outil de support, avant fin novembre. Stack et budget indicatif si connus…",
+    "formSend": "Envoyer ma demande",
+    "formSending": "Envoi de la demande…",
+    "formSuccess": "Votre demande a été prise en charge par le service d’envoi. Je vous répondrai par email.",
     "email": "Email",
     "phone": "Téléphone",
-    "cv": "Télécharger le CV"
+    "cv": "Télécharger le CV",
+    "formMessageLabel": "Besoin et échéance",
+    "formError": "La demande n’a pas pu être envoyée. Réessayez ou contactez-moi par email.",
+    "formPrivacy": "Vos informations servent uniquement à répondre à votre demande.",
+    "directEmail": "Vous préférez un email ? Écrivez-moi directement."
   },
   "footer": {
     "rights": "Tous droits réservés.",
     "madeWith": "Construit avec"
+  },
+  "meta": {
+    "title": "Wael Chatoui | Développeur freelance, CRM, SaaS et IA",
+    "description": "Outils métier, CRM, SaaS et automatisation IA avec Next.js, TypeScript et Python. Découvrez les réalisations de Wael Chatoui et présentez votre projet au forfait."
   }
 }

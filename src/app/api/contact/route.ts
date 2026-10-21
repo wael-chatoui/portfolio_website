@@ -1,32 +1,9 @@
 import { Resend } from 'resend';
-import { NextResponse } from 'next/server';
+import { createContactHandler } from '@/lib/contact';
 
-export async function POST(request: Request) {
-  try {
-    const { name, email, message } = await request.json();
-
-    if (!name || !email || !message) {
-      return NextResponse.json(
-        { error: 'Name, email, and message are required.' },
-        { status: 400 }
-      );
-    }
-
-    const resend = new Resend(process.env.RESEND_API_KEY);
-
-    await resend.emails.send({
-      from: 'Portfolio Contact <onboarding@resend.dev>',
-      to: 'chatoui.wael40@gmail.com',
-      subject: `New message from ${name}`,
-      replyTo: email,
-      text: `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
-    });
-
-    return NextResponse.json({ success: true });
-  } catch {
-    return NextResponse.json(
-      { error: 'Failed to send message. Please try again.' },
-      { status: 500 }
-    );
-  }
-}
+export const POST = createContactHandler({
+  configured: Boolean(process.env.RESEND_API_KEY),
+  from: process.env.CONTACT_FROM_EMAIL || 'Portfolio Contact <onboarding@resend.dev>',
+  to: 'chatoui.wael40@gmail.com',
+  sendEmail: async (payload) => new Resend(process.env.RESEND_API_KEY).emails.send(payload),
+});

@@ -1,58 +1,44 @@
 'use client';
 
-import { useRef, useState } from 'react';
-import { motion, useInView } from 'motion/react';
+import { useState } from 'react';
+import { motion } from 'motion/react';
 import { useTranslations } from 'next-intl';
 
 export default function ContactFooter() {
   const t = useTranslations('contact');
   const tf = useTranslations('footer');
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(sectionRef, { once: true, margin: '-10% 0px' });
 
-  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+  const [formData, setFormData] = useState({ name: '', email: '', message: '', website: '' });
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
-  const [errorMsg, setErrorMsg] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!formData.name.trim() || !formData.email.trim() || !formData.message.trim()) return;
+    if (status === 'loading' || !formData.name.trim() || !formData.email.trim() || !formData.message.trim()) return;
 
     setStatus('loading');
-    setErrorMsg('');
 
     try {
       const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
+        signal: AbortSignal.timeout(15_000),
       });
 
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.error || 'Something went wrong.');
-      }
+      const data = await res.json();
+      if (!res.ok || data.success !== true) throw new Error(t('formError'));
 
       setStatus('success');
-      setFormData({ name: '', email: '', message: '' });
-    } catch (err) {
+      setFormData({ name: '', email: '', message: '', website: '' });
+    } catch {
       setStatus('error');
-      setErrorMsg(err instanceof Error ? err.message : 'Something went wrong.');
     }
   };
 
   return (
-    <div ref={sectionRef}>
-      <motion.div
-        animate={{
-          clipPath: isInView
-            ? 'inset(0% 0 0 0)'
-            : 'inset(100% 0 0 0)',
-        }}
-        transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
-        style={{ clipPath: 'inset(100% 0 0 0)' }}
-      >
+    <div>
+      <div>
         <section
           id="contact"
           className="snap-section relative min-h-screen flex items-center py-20 lg:py-0"
@@ -86,20 +72,31 @@ export default function ContactFooter() {
                 transition={{ duration: 0.7, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
                 className="flex flex-col gap-4 mb-14 text-left"
                 onSubmit={handleSubmit}
+                aria-busy={status === 'loading'}
               >
                 <div className="flex flex-col sm:flex-row gap-4">
+                  <label htmlFor="contact-name" className="sr-only">{t('formName')}</label>
                   <input
+                    id="contact-name"
                     type="text"
                     name="name"
+                    autoComplete="name"
+                    maxLength={120}
+                    disabled={status === 'loading'}
                     placeholder={t('formName')}
                     required
                     value={formData.name}
                     onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))}
                     className="flex-1 bg-white/[0.04] border border-border/50 rounded-lg px-4 py-3 text-sm font-body text-text placeholder:text-text-subtle/60 focus:outline-none focus:border-text-subtle transition-colors duration-300"
                   />
+                  <label htmlFor="contact-email" className="sr-only">{t('formEmail')}</label>
                   <input
+                    id="contact-email"
                     type="email"
                     name="email"
+                    autoComplete="email"
+                    maxLength={254}
+                    disabled={status === 'loading'}
                     placeholder={t('formEmail')}
                     required
                     value={formData.email}
@@ -107,15 +104,24 @@ export default function ContactFooter() {
                     className="flex-1 bg-white/[0.04] border border-border/50 rounded-lg px-4 py-3 text-sm font-body text-text placeholder:text-text-subtle/60 focus:outline-none focus:border-text-subtle transition-colors duration-300"
                   />
                 </div>
+                <label htmlFor="contact-message" className="sr-only">{t('formMessageLabel')}</label>
                 <textarea
+                  id="contact-message"
                   name="message"
                   placeholder={t('formMessage')}
                   required
+                  maxLength={6000}
+                  disabled={status === 'loading'}
                   rows={5}
                   value={formData.message}
                   onChange={(e) => setFormData((prev) => ({ ...prev, message: e.target.value }))}
                   className="w-full bg-white/[0.04] border border-border/50 rounded-lg px-4 py-3 text-sm font-body text-text placeholder:text-text-subtle/60 focus:outline-none focus:border-text-subtle transition-colors duration-300 resize-none"
                 />
+                <div hidden aria-hidden="true">
+                  <label htmlFor="contact-website">Website</label>
+                  <input id="contact-website" name="website" tabIndex={-1} autoComplete="off" value={formData.website} onChange={(e) => setFormData((prev) => ({ ...prev, website: e.target.value }))} />
+                </div>
+                <p className="text-xs text-text-muted">{t('formPrivacy')}</p>
                 <button
                   type="submit"
                   disabled={status === 'loading'}
@@ -136,15 +142,16 @@ export default function ContactFooter() {
 
                 {/* Feedback */}
                 {status === 'success' && (
-                  <p className="text-center text-sm font-body text-green-400 mt-2">
+                  <p role="status" className="text-center text-sm font-body text-green-400 mt-2">
                     {t('formSuccess')}
                   </p>
                 )}
                 {status === 'error' && (
-                  <p className="text-center text-sm font-body text-red-400 mt-2">
-                    {errorMsg}
+                  <p role="alert" className="text-center text-sm font-body text-red-400 mt-2">
+                    {t('formError')}
                   </p>
                 )}
+                <a href="mailto:chatoui.wael40@gmail.com" className="self-center text-sm text-text-muted underline underline-offset-4 hover:text-text">{t('directEmail')}</a>
               </motion.form>
 
               {/* Contact links */}
@@ -185,7 +192,7 @@ export default function ContactFooter() {
             </p>
           </div>
         </footer>
-      </motion.div>
+      </div>
     </div>
   );
 }
