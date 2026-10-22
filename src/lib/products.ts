@@ -15,8 +15,8 @@ export function getProducts(english: boolean) {
       description: english ? 'Record sets, loads and effort, then review your training by exercise or muscle.' : 'Noter ses séries, charges et efforts, puis suivre sa progression par exercice ou par muscle.',
       audience: english ? 'For people who want to follow their own strength training.' : 'Pour les pratiquants qui veulent suivre leur entraînement en musculation.',
       features: english ? ['Free sessions or a custom programme', 'Repetitions, load, effort and session notes', 'Progress by exercise and muscle group'] : ['Séances libres ou programme personnalisé', 'Répétitions, charge, effort et notes de séance', 'Progression par exercice et groupe musculaire'],
-      href: campaignUrl('https://fluide-ppl.vercel.app', 'fluide'),
-      cta: english ? 'Discover Fluide' : 'Découvrir Fluide',
+      href: campaignUrl('https://fluide-ppl.vercel.app', 'fluide', '/welcome#exemple'),
+      cta: english ? 'Try the demo' : 'Essayer la démo',
     },
     {
       id: 'la-redaction', name: 'La rédaction', category: english ? 'Research and writing' : 'Veille et rédaction',

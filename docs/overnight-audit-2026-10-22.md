@@ -37,3 +37,9 @@ Le formulaire contrôle les types et limites, distingue JSON invalide et service
 ## Mise à jour du parcours La Rédaction
 
 Après confirmation du déploiement `739d989` et vérification dans Chrome de la démo publique, le bouton du portail pointe directement vers `/demo` avec les UTMs existants. Libellés : « Essayer la démo » et « Try the demo ». Cette démo est fictive, sans compte; le portfolio ne promet pas d'abonnement ni d'inscription ouverts. Les fonctionnalités décrites restent celles déjà vérifiées.
+
+## Mise à jour du parcours Fluide
+
+Une nouvelle vérification dans Chrome a montré que le lien `/` ouvre le carnet personnel pour un visiteur déjà connecté. Le portail envoie désormais vers `/welcome#exemple`, avec les quatre UTMs conservés et le libellé « Essayer la démo » en français, « Try the demo » en anglais. L'ancre ouvre l'exemple interactif public quelle que soit la session. Les inscriptions gratuites restent accessibles depuis cette présentation; aucun paiement n'est lancé.
+
+Le contrôle de non-régression vérifie les destinations des deux démos et leurs paramètres de campagne dans les deux langues. Les UTMs ne sont toujours pas propagés dans les liens d'inscription des applications : ils identifient le lien d'arrivée, sans établir une attribution de compte ou une conversion mesurée. La session Chrome existante n'a pas été déconnectée et aucun compte de test n'a été créé pour cet audit.

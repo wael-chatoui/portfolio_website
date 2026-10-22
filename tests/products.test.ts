@@ -22,3 +22,19 @@ test('both languages send readers to the correct public teaching page', () => {
     assert.ok(products.every((p) => !p.href.includes('supabase') && !p.href.includes('github')));
   }
 });
+
+test('training and editorial links open their public demos, including for returning users', () => {
+  for (const english of [false, true]) {
+    const products = getProducts(english);
+    const fluide = new URL(products.find((product) => product.id === 'fluide')!.href);
+    const redaction = new URL(products.find((product) => product.id === 'la-redaction')!.href);
+    assert.equal(fluide.pathname, '/welcome');
+    assert.equal(fluide.hash, '#exemple');
+    assert.equal(redaction.pathname, '/demo');
+    for (const url of [fluide, redaction]) {
+      assert.equal(url.searchParams.get('utm_source'), 'portfolio');
+      assert.equal(url.searchParams.get('utm_campaign'), 'produits');
+      assert.deepEqual([...url.searchParams.keys()].sort(), ['utm_campaign', 'utm_content', 'utm_medium', 'utm_source']);
+    }
+  }
+});
