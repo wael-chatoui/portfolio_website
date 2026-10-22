@@ -16,6 +16,6 @@ export default async function ProductsPage() {
   return <>
     <header className="max-w-6xl mx-auto px-6 pt-7 flex justify-between items-center"><Link href="/" className="font-display font-bold text-lg">Wael Chatoui</Link><LocaleSwitcher /></header>
     <main id="main-content" className="pt-20"><div className="max-w-6xl mx-auto px-6"><h1 className="font-display text-5xl lg:text-7xl font-bold tracking-tight max-w-3xl">{english ? 'Teach. Train. Write.' : 'Enseigner. S’entraîner. Écrire.'}</h1><p className="text-lg text-text-muted max-w-xl mt-6 mb-16">{english ? 'Find the right tool for your next lesson, training session or editorial subject.' : 'Trouvez l’outil adapté à votre prochain cours, votre prochaine séance ou votre prochain sujet.'}</p></div><Products full /></main>
-    <footer className="max-w-6xl mx-auto px-6 py-10 border-t border-border"><Link href="/#contact" className="text-sm underline underline-offset-4">{english ? 'Discuss a project with Wael' : 'Parler d’un projet avec Wael'}</Link></footer>
+    <footer className="max-w-6xl mx-auto px-6 py-10 border-t border-border"><Link href="/#contact" className="inline-flex min-h-11 items-center text-sm underline underline-offset-4">{english ? 'Discuss a project with Wael' : 'Parler d’un projet avec Wael'}</Link></footer>
   </>;
 }

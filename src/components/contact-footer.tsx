@@ -87,7 +87,7 @@ export default function ContactFooter() {
                     required
                     value={formData.name}
                     onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))}
-                    className="flex-1 bg-white/[0.04] border border-border/50 rounded-lg px-4 py-3 text-sm font-body text-text placeholder:text-text-subtle/60 focus:outline-none focus:border-text-subtle transition-colors duration-300"
+                    className="flex-1 bg-white/[0.04] border border-border/50 rounded-lg px-4 py-3 text-base sm:text-sm font-body text-text placeholder:text-text-subtle focus:outline-none focus:border-text-subtle transition-colors duration-300"
                   />
                   <label htmlFor="contact-email" className="sr-only">{t('formEmail')}</label>
                   <input
@@ -101,7 +101,7 @@ export default function ContactFooter() {
                     required
                     value={formData.email}
                     onChange={(e) => setFormData((prev) => ({ ...prev, email: e.target.value }))}
-                    className="flex-1 bg-white/[0.04] border border-border/50 rounded-lg px-4 py-3 text-sm font-body text-text placeholder:text-text-subtle/60 focus:outline-none focus:border-text-subtle transition-colors duration-300"
+                    className="flex-1 bg-white/[0.04] border border-border/50 rounded-lg px-4 py-3 text-base sm:text-sm font-body text-text placeholder:text-text-subtle focus:outline-none focus:border-text-subtle transition-colors duration-300"
                   />
                 </div>
                 <label htmlFor="contact-message" className="sr-only">{t('formMessageLabel')}</label>
@@ -115,7 +115,7 @@ export default function ContactFooter() {
                   rows={5}
                   value={formData.message}
                   onChange={(e) => setFormData((prev) => ({ ...prev, message: e.target.value }))}
-                  className="w-full bg-white/[0.04] border border-border/50 rounded-lg px-4 py-3 text-sm font-body text-text placeholder:text-text-subtle/60 focus:outline-none focus:border-text-subtle transition-colors duration-300 resize-none"
+                  className="w-full bg-white/[0.04] border border-border/50 rounded-lg px-4 py-3 text-base sm:text-sm font-body text-text placeholder:text-text-subtle focus:outline-none focus:border-text-subtle transition-colors duration-300 resize-none"
                 />
                 <div hidden aria-hidden="true">
                   <label htmlFor="contact-website">Website</label>

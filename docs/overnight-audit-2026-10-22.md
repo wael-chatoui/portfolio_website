@@ -43,3 +43,9 @@ Après confirmation du déploiement `739d989` et vérification dans Chrome de la
 Une nouvelle vérification dans Chrome a montré que le lien `/` ouvre le carnet personnel pour un visiteur déjà connecté. Le portail envoie désormais vers `/welcome#exemple`, avec les quatre UTMs conservés et le libellé « Essayer la démo » en français, « Try the demo » en anglais. L'ancre ouvre l'exemple interactif public quelle que soit la session. Les inscriptions gratuites restent accessibles depuis cette présentation; aucun paiement n'est lancé.
 
 Le contrôle de non-régression vérifie les destinations des deux démos et leurs paramètres de campagne dans les deux langues. Les UTMs ne sont toujours pas propagés dans les liens d'inscription des applications : ils identifient le lien d'arrivée, sans établir une attribution de compte ou une conversion mesurée. La session Chrome existante n'a pas été déconnectée et aucun compte de test n'a été créé pour cet audit.
+
+## Retour des produits vers le contact
+
+L'activation native au clavier du lien `/produits` vers `/#contact` affiche bien le formulaire. Les clics synthétiques n'avaient pas déclenché la navigation pendant cette recette, ce qui n'établit pas un défaut du site. Le lien Next.js existant est conservé. Sa cible tactile, mesurée à 18,5 px de haut, passe à 44 px minimum pour faciliter l'accès sur téléphone. Le changement ne modifie ni le formulaire ni l'envoi des emails.
+
+Les trois champs du contact utilisent 16 px sur téléphone (14 px conservés à partir du breakpoint `sm`) et le token de texte secondaire sans opacité réduite pour les placeholders. La recette a identifié les anciens 14 px et la couleur semi-transparente peu lisible sur fond sombre. Les labels accessibles, limites, validations et envois restent identiques.
