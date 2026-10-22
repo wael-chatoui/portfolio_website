@@ -7,7 +7,7 @@ Site actif : [wael-chatoui.vercel.app](https://wael-chatoui.vercel.app). La bran
 ## Parcours publics
 
 - `/` : prestations, réalisations, produits et demande de projet.
-- `/produits` : FluentFlow, Fluide et La rédaction, avec liens de campagne sans données personnelles.
+- `/produits` : PhraseLane, Fluide et La rédaction, avec liens de campagne sans données personnelles.
 - `/api/contact` : traitement des demandes via Resend.
 - `/robots.txt`, `/sitemap.xml`, `/opengraph-image` : découverte et partage.
 - `/rippletide` : ancienne page de candidature, exclue de l’indexation.

@@ -3,12 +3,12 @@ import { campaignUrl } from './site';
 export function getProducts(english: boolean) {
   return [
     {
-      id: 'fluent-flow', name: 'FluentFlow', category: english ? 'French teaching' : 'Enseignement du français',
+      id: 'fluent-flow', name: 'PhraseLane', category: english ? 'French teaching' : 'Enseignement du français',
       description: english ? 'Keep the thread between French lessons: lesson summaries, exercises and vocabulary in one place.' : 'Garder le fil entre deux cours de français : bilans, exercices et vocabulaire dans un même espace.',
       audience: english ? 'For independent French teachers and their students.' : 'Pour les professeurs de français indépendants et leurs élèves.',
       features: english ? ['Lesson summaries from transcripts and teacher notes', 'Practice exercises and vocabulary review', 'Teacher access by request, students by invitation'] : ['Bilans à partir des transcriptions et notes de cours', 'Exercices et révision du vocabulaire', 'Accès professeur sur demande, élèves sur invitation'],
       href: campaignUrl('https://fluent-flow.fr', 'fluent-flow', english ? '/en/teachers' : '/professeurs'),
-      cta: english ? 'Discover FluentFlow' : 'Découvrir FluentFlow',
+      cta: english ? 'Discover PhraseLane' : 'Découvrir PhraseLane',
     },
     {
       id: 'fluide', name: 'Fluide', category: english ? 'Training journal' : 'Carnet d’entraînement',

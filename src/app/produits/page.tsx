@@ -6,7 +6,7 @@ import Link from 'next/link';
 
 export async function generateMetadata(): Promise<Metadata> {
   const english = (await getLocale()) === 'en';
-  const title = english ? 'FluentFlow, Fluide and La rédaction | Wael Chatoui' : 'FluentFlow, Fluide et La rédaction | Wael Chatoui';
+  const title = english ? 'PhraseLane, Fluide and La rédaction | Wael Chatoui' : 'PhraseLane, Fluide et La rédaction | Wael Chatoui';
   const description = english ? 'Explore three tools for French teaching, strength training and editorial research.' : 'Découvrez trois outils pour l’enseignement du français, le suivi de musculation et la veille éditoriale.';
   return { title, description, alternates: { canonical: '/produits' }, openGraph: { title, description, url: '/produits', images: ['/opengraph-image'] }, twitter: { card: 'summary_large_image', title, description, images: ['/opengraph-image'] } };
 }
