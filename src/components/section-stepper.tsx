@@ -65,13 +65,6 @@ export default function SectionStepper() {
     };
   }, []);
 
-  const handleClick = (id: string) => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
-    }
-  };
-
   return (
     <motion.div
       initial={{ opacity: 0, x: -20 }}
@@ -86,10 +79,10 @@ export default function SectionStepper() {
         const isActive = activeSection === section.id;
 
         return (
-          <button
+          <a
             key={section.id}
-            onClick={() => handleClick(section.id)}
-            className="relative group flex items-center min-w-11 min-h-11 justify-center cursor-pointer bg-transparent border-none rounded-full"
+            href={`#${section.id}`}
+            className="relative group flex items-center min-w-11 min-h-11 justify-center cursor-pointer bg-transparent border-none rounded-full no-underline"
             aria-label={labels[section.id]}
             aria-current={isActive ? 'location' : undefined}
           >
@@ -127,7 +120,7 @@ export default function SectionStepper() {
             >
               {labels[section.id]}
             </motion.span>
-          </button>
+          </a>
         );
       })}
     </motion.div>
