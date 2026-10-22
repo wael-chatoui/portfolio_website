@@ -151,7 +151,7 @@ export default function ContactFooter() {
                     {t('formError')}
                   </p>
                 )}
-                <a href="mailto:chatoui.wael40@gmail.com" className="self-center text-sm text-text-muted underline underline-offset-4 hover:text-text">{t('directEmail')}</a>
+                <a href="mailto:chatoui.wael40@gmail.com" className="self-center inline-flex min-h-11 items-center text-sm text-text-muted underline underline-offset-4 hover:text-text">{t('directEmail')}</a>
               </motion.form>
 
               {/* Contact links */}
@@ -211,7 +211,7 @@ function ContactLink({
       href={href}
       target={href.startsWith('mailto:') || href.startsWith('tel:') ? undefined : '_blank'}
       rel={href.startsWith('http') ? 'noopener noreferrer' : undefined}
-      className="cursor-pointer inline-flex items-center gap-2 px-4 py-2 rounded-full border border-border/40 text-text-subtle text-xs font-body hover:text-text hover:border-border transition-all duration-300 no-underline"
+      className="cursor-pointer inline-flex min-h-11 items-center gap-2 px-4 py-2 rounded-full border border-border/40 text-text-subtle text-xs font-body hover:text-text hover:border-border transition-all duration-300 no-underline"
     >
       <svg
         className="w-3.5 h-3.5"

@@ -1,6 +1,6 @@
 # Portfolio Wael Chatoui
 
-Purpose: help founders and small business teams understand the offer, inspect concrete delivery and start a project discussion. Secondary route: discover FluentFlow, Fluide and La rédaction.
+Purpose: help founders and small business teams understand the offer, inspect concrete delivery and start a project discussion. Secondary route: discover PhraseLane, Fluide and La rédaction.
 
 The active site uses a dark neutral palette, Syne for display and DM Sans for reading. This maintenance pass keeps that public identity and improves the conversion path. A previous discussion requested a light studio redesign; its full creative brief and new publishable client evidence are still incomplete.
 

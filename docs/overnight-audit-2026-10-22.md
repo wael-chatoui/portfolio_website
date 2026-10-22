@@ -49,3 +49,13 @@ Le contrôle de non-régression vérifie les destinations des deux démos et leu
 L'activation native au clavier du lien `/produits` vers `/#contact` affiche bien le formulaire. Les clics synthétiques n'avaient pas déclenché la navigation pendant cette recette, ce qui n'établit pas un défaut du site. Le lien Next.js existant est conservé. Sa cible tactile, mesurée à 18,5 px de haut, passe à 44 px minimum pour faciliter l'accès sur téléphone. Le changement ne modifie ni le formulaire ni l'envoi des emails.
 
 Les trois champs du contact utilisent 16 px sur téléphone (14 px conservés à partir du breakpoint `sm`) et le token de texte secondaire sans opacité réduite pour les placeholders. La recette a identifié les anciens 14 px et la couleur semi-transparente peu lisible sur fond sombre. Les labels accessibles, limites, validations et envois restent identiques.
+
+## Reprise du soir : accès au contact et installation neuve
+
+Le contrôle du site publié sur Chrome desktop a mesuré 20 px de haut pour le lien email de secours et 34 px pour les liens GitHub, LinkedIn, email et téléphone. Le token du projet prévoit 44 px minimum. Le correctif ajoute `min-h-11` aux deux composants concernés et centre le libellé du lien de secours. Les destinations, le retour à la ligne, le formulaire et le transport email restent identiques. Le brief cite maintenant la marque PhraseLane.
+
+Une installation pnpm neuve a aussi révélé que `npm run lint` ne trouvait pas `eslint`. Il existait dans les deux lockfiles uniquement comme dépendance transitive. Le commit séparé `e6a1796` déclare directement la même version 9.39.5. Aucun paquet résolu ni empreinte d'intégrité ne change ; seuls les liens de dépendance directe et les métadonnées npm sont mis à jour. Aucun script d'installation tiers n'a été approuvé ou exécuté pendant cette correction.
+
+Vérifications de cette passe : 9 tests sans envoi d'email, TypeScript, lint et build Next16.4.2 réussis, installation avec lock figé réussie en ignorant les scripts d'installation, diff propre et détecteur de design sans résultat. Revue indépendante favorable des deux classes de taille tactile.
+
+La recette visuelle après changement reste à faire dans le profil Chrome dédié au portfolio. Les mesures de 20 et 34 px décrivent la production avant correction ; elles ne sont pas une preuve du rendu corrigé. Le changement n'est pas encore publié. La navigation clavier du repère latéral est un point à reproduire, sans défaut déclaré ni modification dans cette passe.
