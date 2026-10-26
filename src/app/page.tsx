@@ -9,6 +9,7 @@ import { siteUrl } from '@/lib/site';
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import Products from '@/components/products';
+import SystemShowcase from '@/components/system-showcase';
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('meta');
@@ -24,6 +25,7 @@ export default function Home() {
       <main id="main-content">
         <Hero />
         <About />
+        <SystemShowcase />
         <Skills />
         <FeaturedProjects />
         <Products />

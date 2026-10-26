@@ -15,3 +15,5 @@ Learned constraints, 2026-10-22:
 - Current production branch is `master`; the user explicitly authorized pushing to the production branch.
 
 Craft Read: portfolio for founders and business teams, marketing language, existing neutral dark system, variance 5 for this maintenance pass, signature bet: concrete deliverables connected to relevant case studies.
+
+2026-10-26 : ajout d'un schéma de flux métier interactif (CRM, automatisation, produit), illustration explicitement séparée des données client. Scène déclenchée volontairement, lecture statique mobile/réduction des mouvements. Nouvelle prestation bilingue /prestations/outils-metier-crm pour cadrer une demande depuis le besoin, les droits, les intégrations et les livrables, avec preuve existante du CRM interne. Aucun prix/TJM ou résultat client ajouté.
