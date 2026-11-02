@@ -163,3 +163,11 @@
 
 .invoice-conflict-option { display:flex; align-items:flex-start; gap:10px; color:#5a5948; font-size:12px; line-height:1.5; margin:14px 0 24px; }
 .invoice-conflict-option input { width:16px; height:16px; margin-top:2px; flex-shrink:0; }
+
+.studio-list-main .studio-invoice-title { display:flex; flex-wrap:wrap; column-gap:10px; row-gap:2px; font-size:14px; line-height:1.5; }
+.studio-invoice-title > span:first-child { font-weight:700; white-space:nowrap; }
+.studio-invoice-title > span:last-child { overflow-wrap:anywhere; }
+.studio-load-more { display:flex; justify-content:center; margin-top:20px; }
+.studio-load-more button { padding:10px 22px; border:1px solid var(--s-line); border-radius:8px; color:var(--s-text); background:var(--s-surface); font-size:13px; }
+.studio-load-more button:hover { background:#252a2f; }
+@media(max-width:650px) { .studio-list-row:has(.studio-invoice-title) .studio-list-main { flex-basis:100%; } }
