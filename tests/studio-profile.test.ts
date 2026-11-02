@@ -29,3 +29,16 @@ test('invoice numbering advances from the latest saved number', async () => {
   assert.equal(nextInvoiceNumber('abc'), null);
   assert.equal(nextInvoiceNumber('99999999'), null);
 });
+
+test('previous preparations receive the fields needed for creation without changing recorded invoices', async () => {
+  const { editableInvoice } = await import('../src/lib/studio-profile');
+  const old = { name:'Mission',seller:'Entreprise Exemple',invoiceNumber:'INV012',client:'Client Exemple',iban:'FR00' };
+  const editable = editableInvoice(old,null);
+  assert.equal(editable.seller,'Entreprise Exemple EI');
+  assert.equal(editable.invoiceNumber,'INV012');
+  assert.equal(editable.taxRegime,'franchise');
+  assert.match(editable.issueDate,/^\d{4}-\d{2}-\d{2}$/);
+  assert.equal(old.seller,'Entreprise Exemple');
+  const issued = {...old,issuedAt:'2026-10-18T10:00:00.000Z'};
+  assert.strictEqual(editableInvoice(issued,null),issued);
+});

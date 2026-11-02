@@ -33,8 +33,8 @@ export const kinds = ['project', 'contact', 'invoice', 'expense'] as const;
 export type Kind = typeof kinds[number];
 export const fields: Record<Kind, string[]> = {
   project: ['name', 'category', 'status', 'priority', 'next', 'url', 'notes'],
-  contact: ['name', 'company', 'email', 'phone', 'status', 'next', 'notes', 'legalName', 'registeredAddress', 'billingAddress', 'billingEmail', 'billingWarning', 'siren', 'siret', 'vatNumber', 'role', 'iban', 'invoiceSequence'],
-  invoice: ['name', 'invoiceNumber', 'items', 'clientId', 'client', 'clientAddress', 'clientAddressSource', 'clientEmail', 'clientWarning', 'clientSiren', 'clientSiret', 'clientVatNumber', 'seller', 'sellerAddress', 'siren', 'sellerSiret', 'iban', 'serviceDate', 'dueDate', 'amountBeforeTax', 'vat', 'amount', 'date', 'status', 'paymentTerms', 'notes'],
+  contact: ['name', 'company', 'email', 'phone', 'status', 'next', 'notes', 'legalName', 'registeredAddress', 'billingAddress', 'billingEmail', 'billingWarning', 'siren', 'siret', 'vatNumber', 'role', 'iban', 'invoiceSequence', 'invoiceLastNumber'],
+  invoice: ['name', 'issueDate', 'issuedAt', 'historical', 'sourceName', 'sourceSha256', 'sourcePdf', 'paymentUnconfirmed', 'taxRegime', 'discountTerms', 'latePenalty', 'recoveryTerms', 'purchaseOrder', 'invoiceNumber', 'items', 'clientId', 'client', 'clientAddress', 'clientAddressSource', 'clientEmail', 'clientWarning', 'clientSiren', 'clientSiret', 'clientVatNumber', 'seller', 'sellerAddress', 'siren', 'sellerSiret', 'iban', 'serviceDate', 'dueDate', 'amountBeforeTax', 'vat', 'amount', 'date', 'status', 'paymentTerms', 'notes'],
   expense: ['name', 'category', 'amount', 'date', 'status', 'notes'],
 };
 export function clean(kind: Kind, value: unknown): Record<string, string> | null {
@@ -42,7 +42,7 @@ export function clean(kind: Kind, value: unknown): Record<string, string> | null
   const input = value as Record<string, unknown>; const result: Record<string, string> = {};
   for (const field of fields[kind]) {
     const v = input[field] ?? '';
-    if (typeof v !== 'string' || v.length > (field === 'items' ? 30000 : field === 'notes' ? 4000 : 300)) return null;
+    if (typeof v !== 'string' || v.length > (field === 'sourcePdf' ? 2800000 : field === 'items' ? 30000 : field === 'notes' ? 4000 : 300)) return null;
     result[field] = v.trim();
   }
   if (!result.name) return null;
@@ -51,7 +51,7 @@ export function clean(kind: Kind, value: unknown): Record<string, string> | null
     if (!lines || total === null || !result.amount || formatCents(total) !== formatCents(Math.round(Number(result.amount.replace(',', '.')) * 100))) return null;
   }
   for (const field of ['amount', 'amountBeforeTax', 'vat']) if (result[field] && !/^\d{1,9}(?:[.,]\d{1,2})?$/.test(result[field])) return null;
-  for (const field of ['date', 'serviceDate', 'dueDate']) if (result[field] && !/^\d{4}-\d{2}-\d{2}$/.test(result[field])) return null;
+  for (const field of ['date', 'issueDate', 'serviceDate', 'dueDate']) if (result[field] && !/^\d{4}-\d{2}-\d{2}$/.test(result[field])) return null;
   if (kind === 'invoice' && result.amount && result.amountBeforeTax && result.vat) {
     const cents = (value: string) => { const [whole, fraction = ''] = value.replace(',', '.').split('.'); return Number(whole) * 100 + Number((fraction + '00').slice(0, 2)); };
     if (cents(result.amountBeforeTax) + cents(result.vat) !== cents(result.amount)) return null;

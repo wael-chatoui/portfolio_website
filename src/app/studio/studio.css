@@ -153,3 +153,10 @@
 @media(max-width:650px) { .invoice-line-amounts { grid-template-columns:1fr 1fr; } .invoice-line-total { grid-column:1/-1; grid-template-columns:1fr auto; align-items:center; } .invoice-line-total strong { padding:0; } }
 .invoice-payment .invoice-thanks { margin-top:14px; }
 @media(max-width:650px) { .studio-modal-actions { flex-wrap:wrap; } }
+.invoice-number { width:200px; flex:none; }
+.invoice-number small { font-size:10px; font-weight:400; }
+.invoice-editable-content { border:0; padding:0; margin:0; min-width:0; }
+.invoice-editable-content:disabled input,.invoice-editable-content:disabled textarea,.invoice-editable-content:disabled select { color:#303b2b; background:#edf0e9; opacity:1; }
+.studio-import-invoice { color:#d2e1c4; text-decoration:underline; margin:0 0 20px; font-size:13px; }
+.invoice-original-upload { padding:14px; border:1px dashed #a8b49f; margin:0 0 20px; font-size:12px; }
+@media(max-width:650px){.invoice-document-head{flex-wrap:wrap}.invoice-number{width:100%}}

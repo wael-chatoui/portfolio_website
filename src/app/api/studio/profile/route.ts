@@ -25,6 +25,8 @@ export async function POST(request: Request) {
       const existing = await client.query('SELECT kind, data FROM studio_records WHERE id = $1 FOR UPDATE', [billingProfileId]);
       if (existing.rowCount && existing.rows[0].kind !== 'contact') { await client.query('ROLLBACK'); return NextResponse.json({ error: 'Profil indisponible.' }, { status: 409 }); }
       const previous = existing.rows[0]?.data?.invoiceSequence || '';
+      data.invoiceLastNumber = existing.rows[0]?.data?.invoiceLastNumber || '';
+      if (data.invoiceSequence && Number(data.invoiceSequence) > Number(previous || 0)) data.invoiceLastNumber = '';
       if (previous && (!data.invoiceSequence || Number(data.invoiceSequence) < Number(previous))) data.invoiceSequence = previous;
       await client.query("INSERT INTO studio_records (id, kind, data) VALUES ($1, 'contact', $2) ON CONFLICT (id) DO UPDATE SET data = EXCLUDED.data, updated_at = now()", [billingProfileId, data]);
       await client.query('COMMIT');

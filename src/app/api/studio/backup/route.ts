@@ -1,5 +1,8 @@
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
+import { createHash } from 'node:crypto';
+import { billingProfileId } from '@/lib/studio-profile';
+import { invoiceNumberKey } from '@/lib/studio-invoice-policy';
 import { clean, cookieName, db, kinds, sameOrigin, validSession, type Kind } from '@/lib/studio';
 
 export const dynamic = 'force-dynamic';
@@ -44,7 +47,25 @@ export async function POST(request: Request) {
     const client = await db().connect();
     try {
       await client.query('BEGIN'); let inserted = 0;
+      await client.query('SELECT id FROM studio_records WHERE id = $1 FOR UPDATE', [billingProfileId]);
+      const existing = await client.query("SELECT id, kind, data->>'invoiceNumber' AS number, data->>'sourceSha256' AS hash FROM studio_records");
+      const existingIds = new Set(existing.rows.map(row => row.id));
+      const numbers = new Set(existing.rows.filter(row => row.kind === 'invoice' && row.number).map(row => invoiceNumberKey(row.number)));
+      const hashes = new Set(existing.rows.filter(row => row.kind === 'invoice' && row.hash).map(row => row.hash));
       for (const item of items) {
+        if (existingIds.has(item.id)) continue;
+        if (item.kind === 'invoice') {
+          const number = item.data.invoiceNumber && invoiceNumberKey(item.data.invoiceNumber);
+          let hash = '';
+          if (item.data.sourcePdf) {
+            const bytes = Buffer.from(item.data.sourcePdf, 'base64');
+            if (bytes.length > 2000000 || !bytes.subarray(0,5).equals(Buffer.from('%PDF-'))) { await client.query('ROLLBACK'); return NextResponse.json({error:'PDF original invalide dans la sauvegarde.'},{status:400}); }
+            hash = createHash('sha256').update(bytes).digest('hex'); item.data.sourceSha256 = hash;
+          }
+          if ((number && numbers.has(number)) || (hash && hashes.has(hash))) { await client.query('ROLLBACK'); return NextResponse.json({error:'Une facture de la sauvegarde existe déjà sous un autre identifiant. Aucun élément ajouté.'},{status:409}); }
+          if (number) numbers.add(number);
+          if (hash) hashes.add(hash);
+        }
         const result = await client.query('INSERT INTO studio_records (id, kind, data, created_at, updated_at) VALUES ($1, $2, $3, $4, $5) ON CONFLICT (id) DO NOTHING', [item.id, item.kind, item.data, item.createdAt, item.updatedAt]);
         inserted += result.rowCount || 0;
       }
