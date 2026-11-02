@@ -141,3 +141,13 @@
 .studio-profile form > button { margin-top:16px; }
 .invoice-seller,.invoice-payment p { white-space:pre-line; font-size:14px; line-height:1.6; overflow-wrap:anywhere; margin:0; }
 .invoice-payment { border-top:1px solid #d7dbd3; margin:12px 0 18px; padding-top:18px; }
+.invoice-line { min-width:0; border:0; border-bottom:1px solid #d7dbd3; margin:0 0 18px; padding:0 0 14px; }
+.invoice-line legend { color:#52604e; font-size:12px; font-weight:700; margin-bottom:12px; }
+.invoice-line-amounts { display:grid; grid-template-columns:minmax(90px,1fr) minmax(120px,1.2fr) minmax(95px,1fr); gap:12px; align-items:start; }
+.invoice-line-total { display:grid; gap:8px; color:#52604e; font-size:11px; font-weight:600; }
+.invoice-line-total strong { color:#202a1e; font-size:14px; padding:9px 0; overflow-wrap:anywhere; }
+.invoice-remove-line,.invoice-add-line { font-size:12px; text-decoration:underline; text-underline-offset:3px; padding:7px 0; }
+.invoice-remove-line { color:#87514a; }
+.invoice-add-line { color:#52694a; font-weight:700; }
+.invoice-grand-total { display:flex; justify-content:space-between; gap:16px; border-top:1px solid #d7dbd3; padding:18px 0 8px; margin-top:14px; font-weight:700; }
+@media(max-width:650px) { .invoice-line-amounts { grid-template-columns:1fr 1fr; } .invoice-line-total { grid-column:1/-1; grid-template-columns:1fr auto; align-items:center; } .invoice-line-total strong { padding:0; } }

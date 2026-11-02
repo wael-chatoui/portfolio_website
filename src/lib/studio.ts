@@ -1,4 +1,5 @@
 import { Pool } from 'pg';
+import { formatCents, linesTotal, parseLines } from './studio-invoice-lines';
 import { createHmac, randomBytes, timingSafeEqual } from 'node:crypto';
 
 declare global { var studioPool: Pool | undefined }
@@ -33,7 +34,7 @@ export type Kind = typeof kinds[number];
 export const fields: Record<Kind, string[]> = {
   project: ['name', 'category', 'status', 'priority', 'next', 'url', 'notes'],
   contact: ['name', 'company', 'email', 'phone', 'status', 'next', 'notes', 'legalName', 'registeredAddress', 'billingAddress', 'billingEmail', 'billingWarning', 'siren', 'siret', 'vatNumber', 'role', 'iban'],
-  invoice: ['name', 'clientId', 'client', 'clientAddress', 'clientAddressSource', 'clientEmail', 'clientWarning', 'clientSiren', 'clientSiret', 'clientVatNumber', 'seller', 'sellerAddress', 'siren', 'sellerSiret', 'iban', 'serviceDate', 'dueDate', 'amountBeforeTax', 'vat', 'amount', 'date', 'status', 'paymentTerms', 'notes'],
+  invoice: ['name', 'items', 'clientId', 'client', 'clientAddress', 'clientAddressSource', 'clientEmail', 'clientWarning', 'clientSiren', 'clientSiret', 'clientVatNumber', 'seller', 'sellerAddress', 'siren', 'sellerSiret', 'iban', 'serviceDate', 'dueDate', 'amountBeforeTax', 'vat', 'amount', 'date', 'status', 'paymentTerms', 'notes'],
   expense: ['name', 'category', 'amount', 'date', 'status', 'notes'],
 };
 export function clean(kind: Kind, value: unknown): Record<string, string> | null {
@@ -41,10 +42,14 @@ export function clean(kind: Kind, value: unknown): Record<string, string> | null
   const input = value as Record<string, unknown>; const result: Record<string, string> = {};
   for (const field of fields[kind]) {
     const v = input[field] ?? '';
-    if (typeof v !== 'string' || v.length > (field === 'notes' ? 4000 : 300)) return null;
+    if (typeof v !== 'string' || v.length > (field === 'items' ? 30000 : field === 'notes' ? 4000 : 300)) return null;
     result[field] = v.trim();
   }
   if (!result.name) return null;
+  if (kind === 'invoice' && result.items) {
+    const lines = parseLines(result.items); const total = lines && linesTotal(lines);
+    if (!lines || total === null || !result.amount || formatCents(total) !== formatCents(Math.round(Number(result.amount.replace(',', '.')) * 100))) return null;
+  }
   for (const field of ['amount', 'amountBeforeTax', 'vat']) if (result[field] && !/^\d{1,9}(?:[.,]\d{1,2})?$/.test(result[field])) return null;
   for (const field of ['date', 'serviceDate', 'dueDate']) if (result[field] && !/^\d{4}-\d{2}-\d{2}$/.test(result[field])) return null;
   if (kind === 'invoice' && result.amount && result.amountBeforeTax && result.vat) {

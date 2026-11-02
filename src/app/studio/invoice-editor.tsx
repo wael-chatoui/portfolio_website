@@ -1,6 +1,7 @@
 'use client';
 
 import { paymentStatus } from '@/lib/studio-profile';
+import { displayCents, emptyLine, lineTotal, linesForDraft, linesTotal, type InvoiceLine } from '@/lib/studio-invoice-lines';
 
 type Contact = { id: string; data: Record<string, string> };
 type Props = {
@@ -8,9 +9,12 @@ type Props = {
   contacts: Contact[];
   onChange: (key: string, value: string) => void;
   onSelectClient: (id: string) => void;
+  onLinesChange: (lines: InvoiceLine[]) => void;
 };
 
-export default function InvoiceEditor({ data, contacts, onChange, onSelectClient }: Props) {
+export default function InvoiceEditor({ data, contacts, onChange, onSelectClient, onLinesChange }: Props) {
+  const lines = linesForDraft(data);
+  const changeLine = (index: number, field: keyof InvoiceLine, value: string) => onLinesChange(lines.map((line, i) => i === index ? { ...line, [field]: value } : line));
   const legacyTax = !!data.vat && Number(data.vat.replace(',', '.')) !== 0;
   const input = (key: string, label: string, placeholder: string, options?: { type?: string; required?: boolean; disabled?: boolean }) => (
     <label className="invoice-field">
@@ -31,14 +35,20 @@ export default function InvoiceEditor({ data, contacts, onChange, onSelectClient
         <label className="invoice-field"><span>Choisir un client</span><select value={data.clientId || ''} onChange={event => onSelectClient(event.target.value)}><option value="">Saisie manuelle</option>{data.clientId && !contacts.some(contact => contact.id === data.clientId) && <option value={data.clientId}>Fiche client introuvable</option>}{contacts.map(contact => <option key={contact.id} value={contact.id}>{contact.data.legalName || contact.data.company || contact.data.name}{contact.data.name && contact.data.name !== (contact.data.legalName || contact.data.company) && (contact.data.legalName || contact.data.company) ? ` (${contact.data.name})` : ''}</option>)}</select></label>
         {data.clientWarning && <p className="invoice-warning">{data.clientWarning}</p>}
         {data.clientAddressSource === 'registered' && <p className="invoice-warning">Adresse du siège : vérifie qu’elle convient pour la facturation.</p>}
-        {input('client', 'Nom du client', 'Nom ou raison sociale')}
-        {address('clientAddress', 'Adresse du client')}
-        {input('clientSiret', 'SIRET du client', 'SIRET du client')}
-        <details className="invoice-details"><summary>Autres coordonnées du client</summary>{input('clientSiren', 'SIREN du client', 'SIREN du client')}{input('clientEmail', 'E-mail du client', 'E-mail du client', { type: 'email' })}</details>
+        {data.clientId ? <p className="invoice-seller">{data.client || 'Nom à renseigner'}{data.clientAddress && <><br/>{data.clientAddress}</>}{data.clientSiret ? <><br/>SIRET : {data.clientSiret}</> : data.clientSiren ? <><br/>SIREN : {data.clientSiren}</> : null}{data.clientEmail && <><br/>{data.clientEmail}</>}</p> : <>{input('client', 'Nom du client', 'Nom ou raison sociale')}{address('clientAddress', 'Adresse du client')}{input('clientSiret', 'SIRET du client', 'SIRET du client')}<details className="invoice-details"><summary>Autres coordonnées du client</summary>{input('clientSiren', 'SIREN du client', 'SIREN du client')}{input('clientEmail', 'E-mail du client', 'E-mail du client', { type: 'email' })}</details></>}
       </section>
     </div>
-    <div className="invoice-service"><h4>Prestation</h4><div className="invoice-service-row">{input('name', 'Description', 'Ex. Création du site', { required: true })}{input('amount', 'Montant en €', '0,00', { disabled: legacyTax })}</div>
-      {legacyTax && <p className="invoice-warning">Ce brouillon contient des montants de TVA enregistrés auparavant. Ils sont conservés ; son montant ne peut pas être modifié dans ce modèle simplifié.</p>}
+    <div className="invoice-service"><h4>Prestations</h4>
+      {legacyTax ? <><p className="invoice-warning">Ce brouillon contient des montants de TVA enregistrés auparavant. Ils sont conservés ; son montant ne peut pas être modifié dans ce modèle simplifié.</p><p>{data.name} · {data.amount} €</p></> : <>
+      {lines.map((line, index) => <fieldset className="invoice-line" key={index}><legend>Prestation {index + 1}</legend>
+        <label className="invoice-field"><span>Nom de la prestation *</span><input required maxLength={120} value={line.name} placeholder="Ex. Création de site" onChange={event => changeLine(index, 'name', event.target.value)} /></label>
+        <label className="invoice-field"><span>Description</span><textarea rows={2} maxLength={500} value={line.description} placeholder="Détail de la prestation" onChange={event => changeLine(index, 'description', event.target.value)} /></label>
+        <div className="invoice-line-amounts"><label className="invoice-field"><span>Quantité *</span><input required inputMode="decimal" maxLength={9} value={line.quantity} onChange={event => changeLine(index, 'quantity', event.target.value)} /></label><label className="invoice-field"><span>Prix unitaire en € *</span><input required inputMode="decimal" maxLength={12} value={line.unitPrice} placeholder="0,00" onChange={event => changeLine(index, 'unitPrice', event.target.value)} /></label><div className="invoice-line-total"><span>Total</span><strong>{displayCents(lineTotal(line))}</strong></div></div>
+        {lines.length > 1 && <button type="button" className="invoice-remove-line" onClick={() => onLinesChange(lines.filter((_, i) => i !== index))}>Supprimer cette prestation</button>}
+      </fieldset>)}
+      {lines.length < 30 && <button type="button" className="invoice-add-line" onClick={() => onLinesChange([...lines, emptyLine()])}>+ Ajouter une prestation</button>}
+      <div className="invoice-grand-total"><span>Total</span><strong>{displayCents(linesTotal(lines))}</strong></div>
+      </>}
     </div>
     <div className="invoice-dates">{input('serviceDate', 'Date de prestation', '', { type: 'date' })}{input('dueDate', 'Date limite de paiement', '', { type: 'date' })}</div>
     <div className="invoice-payment"><h4>Paiement</h4><p>Par virement bancaire{data.iban ? <><br/>IBAN : {data.iban}</> : <><br/>IBAN à renseigner dans « Mes coordonnées de facturation »</>}</p></div>
