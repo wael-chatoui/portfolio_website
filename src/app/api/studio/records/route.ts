@@ -60,8 +60,10 @@ export async function POST(request: Request) {
         while (number && used.has(invoiceNumberKey(number))) number = followingInvoiceNumber(number) || '';
       }
       if (!number) { await client.query('ROLLBACK'); return NextResponse.json({ error: 'Numérotation indisponible.' }, { status: 400 }); }
-      if (used.has(invoiceNumberKey(number))) { await client.query('ROLLBACK'); return NextResponse.json({ error: 'Ce numéro de facture est déjà utilisé. Choisis un autre numéro.' }, { status: 409 }); }
+      const numberConflict = used.has(invoiceNumberKey(number));
+      if (numberConflict && !(data.historical === 'yes' && data.numberConflict === 'yes')) { await client.query('ROLLBACK'); return NextResponse.json({ error: 'Ce numéro de facture est déjà utilisé. Choisis un autre numéro.' }, { status: 409 }); }
       data.invoiceNumber = number;
+      data.numberConflict = numberConflict ? 'yes' : '';
       if (data.historical === 'yes') {
         if (!data.sourcePdf || !data.issueDate || !Number.isFinite(Date.parse(data.issueDate + 'T12:00:00Z')) || new Date(data.issueDate + 'T12:00:00Z').toISOString().slice(0,10) !== data.issueDate) { await client.query('ROLLBACK'); return NextResponse.json({ error: 'Ajoute le PDF original et sa date de facture.' }, { status: 400 }); }
         const bytes = Buffer.from(data.sourcePdf, 'base64');

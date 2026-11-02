@@ -52,6 +52,7 @@ export async function POST(request: Request) {
       const existingIds = new Set(existing.rows.map(row => row.id));
       const numbers = new Set(existing.rows.filter(row => row.kind === 'invoice' && row.number).map(row => invoiceNumberKey(row.number)));
       const hashes = new Set(existing.rows.filter(row => row.kind === 'invoice' && row.hash).map(row => row.hash));
+      const conflictNumbers = new Set(items.filter(item => item.kind === 'invoice' && item.data.historical === 'yes' && item.data.numberConflict === 'yes').map(item => invoiceNumberKey(item.data.invoiceNumber)));
       for (const item of items) {
         if (existingIds.has(item.id)) continue;
         if (item.kind === 'invoice') {
@@ -62,7 +63,7 @@ export async function POST(request: Request) {
             if (bytes.length > 2000000 || !bytes.subarray(0,5).equals(Buffer.from('%PDF-'))) { await client.query('ROLLBACK'); return NextResponse.json({error:'PDF original invalide dans la sauvegarde.'},{status:400}); }
             hash = createHash('sha256').update(bytes).digest('hex'); item.data.sourceSha256 = hash;
           }
-          if ((number && numbers.has(number)) || (hash && hashes.has(hash))) { await client.query('ROLLBACK'); return NextResponse.json({error:'Une facture de la sauvegarde existe déjà sous un autre identifiant. Aucun élément ajouté.'},{status:409}); }
+          if ((number && numbers.has(number) && !(item.data.historical === 'yes' && conflictNumbers.has(number))) || (hash && hashes.has(hash))) { await client.query('ROLLBACK'); return NextResponse.json({error:'Une facture de la sauvegarde existe déjà sous un autre identifiant. Aucun élément ajouté.'},{status:409}); }
           if (number) numbers.add(number);
           if (hash) hashes.add(hash);
         }

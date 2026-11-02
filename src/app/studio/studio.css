@@ -160,3 +160,6 @@
 .studio-import-invoice { color:#d2e1c4; text-decoration:underline; margin:0 0 20px; font-size:13px; }
 .invoice-original-upload { padding:14px; border:1px dashed #a8b49f; margin:0 0 20px; font-size:12px; }
 @media(max-width:650px){.invoice-document-head{flex-wrap:wrap}.invoice-number{width:100%}}
+
+.invoice-conflict-option { display:flex; align-items:flex-start; gap:10px; color:#5a5948; font-size:12px; line-height:1.5; margin:14px 0 24px; }
+.invoice-conflict-option input { width:16px; height:16px; margin-top:2px; flex-shrink:0; }

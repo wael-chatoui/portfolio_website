@@ -32,7 +32,8 @@ export default function InvoiceEditor({ data, contacts, onChange, onSelectClient
   );
   return <div className="invoice-document">
     <header className="invoice-document-head"><div><span className="invoice-kicker">{historical ? 'FACTURE IMPORTÉE' : 'FACTURE'}</span><h3>Facture</h3><p>{locked ? 'Facture enregistrée. Seul le paiement reste modifiable.' : historical ? 'Reprends le numéro et les montants du PDF original.' : 'Complète les informations puis crée la facture.'}</p></div><label className="invoice-field invoice-number"><span>Numéro de facture</span><input disabled={locked} maxLength={40} value={data.invoiceNumber !== undefined ? data.invoiceNumber : suggestedNumber || ''} placeholder={suggestedNumber || 'Ex. INV013'} onChange={e=>onChange('invoiceNumber',e.target.value)}/>{!locked&&<small>{historical ? 'Numéro exact du document d’origine.' : 'Proposé automatiquement, modifiable avant création.'}</small>}</label></header>
-    {historical && !locked && <InvoiceOriginalUpload name={data.sourceName} onFile={onOriginal}/>}
+    {historical && !locked && <><InvoiceOriginalUpload name={data.sourceName} onFile={onOriginal}/><label className="invoice-conflict-option"><input type="checkbox" checked={data.numberConflict === 'yes'} onChange={e=>onChange('numberConflict',e.target.checked ? 'yes' : '')}/><span>Ce PDF porte un numéro déjà utilisé : conserver le numéro d’origine et signaler le conflit.</span></label></>}
+    {locked && data.numberConflict === 'yes' && <p className="invoice-warning" role="status">Numéro en doublon sur les documents d’origine. Vérifie les deux factures concernées ; leurs PDF sont conservés.</p>}
     <fieldset className="invoice-editable-content" disabled={locked}>
     <div className="invoice-parties">
       <section aria-labelledby="invoice-seller-title"><h4 id="invoice-seller-title">De</h4>

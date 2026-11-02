@@ -34,7 +34,7 @@ export type Kind = typeof kinds[number];
 export const fields: Record<Kind, string[]> = {
   project: ['name', 'category', 'status', 'priority', 'next', 'url', 'notes'],
   contact: ['name', 'company', 'email', 'phone', 'status', 'next', 'notes', 'legalName', 'registeredAddress', 'billingAddress', 'billingEmail', 'billingWarning', 'siren', 'siret', 'vatNumber', 'role', 'iban', 'invoiceSequence', 'invoiceLastNumber'],
-  invoice: ['name', 'issueDate', 'issuedAt', 'historical', 'sourceName', 'sourceSha256', 'sourcePdf', 'paymentUnconfirmed', 'taxRegime', 'discountTerms', 'latePenalty', 'recoveryTerms', 'purchaseOrder', 'invoiceNumber', 'items', 'clientId', 'client', 'clientAddress', 'clientAddressSource', 'clientEmail', 'clientWarning', 'clientSiren', 'clientSiret', 'clientVatNumber', 'seller', 'sellerAddress', 'siren', 'sellerSiret', 'iban', 'serviceDate', 'dueDate', 'amountBeforeTax', 'vat', 'amount', 'date', 'status', 'paymentTerms', 'notes'],
+  invoice: ['name', 'issueDate', 'issuedAt', 'historical', 'numberConflict', 'sourceName', 'sourceSha256', 'sourcePdf', 'paymentUnconfirmed', 'taxRegime', 'discountTerms', 'latePenalty', 'recoveryTerms', 'purchaseOrder', 'invoiceNumber', 'items', 'clientId', 'client', 'clientAddress', 'clientAddressSource', 'clientEmail', 'clientWarning', 'clientSiren', 'clientSiret', 'clientVatNumber', 'seller', 'sellerAddress', 'siren', 'sellerSiret', 'iban', 'serviceDate', 'dueDate', 'amountBeforeTax', 'vat', 'amount', 'date', 'status', 'paymentTerms', 'notes'],
   expense: ['name', 'category', 'amount', 'date', 'status', 'notes'],
 };
 export function clean(kind: Kind, value: unknown): Record<string, string> | null {
