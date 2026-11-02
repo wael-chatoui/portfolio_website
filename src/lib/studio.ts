@@ -1,6 +1,5 @@
 import { Pool } from 'pg';
 import { createHmac, randomBytes, timingSafeEqual } from 'node:crypto';
-import { verify } from 'otplib';
 
 declare global { var studioPool: Pool | undefined }
 export function databaseUrl() { return process.env.STUDIO_DATABASE_DATABASE_URL || process.env.STUDIO_DATABASE_URL || ''; }
@@ -11,18 +10,12 @@ export function db() {
 
 export const cookieName = 'studio_session';
 const key = () => process.env.STUDIO_SESSION_SECRET || '';
-export function totpRequired() { return process.env.NODE_ENV === 'production' || !!process.env.STUDIO_TOTP_SECRET; }
-export function configured() { return (process.env.STUDIO_PASSWORD || '').length >= 16 && key().length >= 32 && !!databaseUrl() && (!totpRequired() || /^[A-Z2-7]{32,}$/.test(process.env.STUDIO_TOTP_SECRET || '')); }
-function sign(value: string) { return createHmac('sha256', key()).update(process.env.STUDIO_TOTP_SECRET || '').update(':').update(value).digest('hex'); }
+export function configured() { return (process.env.STUDIO_PASSWORD || '').length >= 16 && key().length >= 32 && !!databaseUrl(); }
+const ownerEmail = () => (process.env.STUDIO_EMAIL || 'chatoui.wael40@gmail.com').trim().toLowerCase();
+function sign(value: string) { return createHmac('sha256', key()).update(ownerEmail()).update(':').update(process.env.STUDIO_PASSWORD || '').update(':').update(value).digest('hex'); }
 function same(a: string, b: string) { const x = Buffer.from(a); const y = Buffer.from(b); return x.length === y.length && timingSafeEqual(x, y); }
 export function passwordMatches(password: string) { return same(createHmac('sha256', key()).update(password).digest('hex'), createHmac('sha256', key()).update(process.env.STUDIO_PASSWORD || '').digest('hex')); }
-export async function verifyTotp(token: string) {
-  if (!totpRequired()) return { valid: true as const, timeStep: 0 };
-  if (!/^\d{6}$/.test(token)) return { valid: false as const };
-  try { const result = await verify({ secret: process.env.STUDIO_TOTP_SECRET || '', token, epochTolerance: [30, 0] });
-    return result.valid && 'timeStep' in result && typeof result.timeStep === 'number' ? { valid: true as const, timeStep: result.timeStep } : { valid: false as const };
-  } catch { return { valid: false as const }; }
-}
+export function emailMatches(email: string) { return same(createHmac('sha256', key()).update(email.trim().toLowerCase()).digest('hex'), createHmac('sha256', key()).update(ownerEmail()).digest('hex')); }
 export function makeSession() { const value = `${Date.now() + 12 * 60 * 60 * 1000}.${randomBytes(24).toString('hex')}`; return `${value}.${sign(value)}`; }
 export function validSession(token?: string) {
   if (!configured() || !token) return false;

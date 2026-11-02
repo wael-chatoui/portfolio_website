@@ -1,7 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { clean, configured, databaseUrl, makeSession, passwordMatches, sameOrigin, validSession, verifyTotp } from '../src/lib/studio';
-import { generate } from 'otplib';
+import { clean, configured, databaseUrl, emailMatches, makeSession, passwordMatches, sameOrigin, validSession } from '../src/lib/studio';
 
 process.env.STUDIO_DATABASE_URL = 'postgresql://localhost/studio-test';
 process.env.STUDIO_PASSWORD = 'only-a-fictitious-test-password';
@@ -39,16 +38,12 @@ test('writes accept only matching request origin', () => {
   assert.equal(sameOrigin(new Request('https://example.com/api/studio', { headers: { origin: 'https://other.example' } })), false);
   assert.equal(sameOrigin(new Request('https://example.com/api/studio')), false);
 });
-test('a configured authenticator rejects missing and incorrect codes and invalidates old sessions', async () => {
+test('only the configured email is accepted and changing credentials invalidates old sessions', () => {
   const oldSession = makeSession();
-  process.env.STUDIO_TOTP_SECRET = 'JBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXP';
+  assert.equal(emailMatches(' CHATouI.Wael40@gmail.com '), true);
+  assert.equal(emailMatches('someone@example.com'), false);
+  process.env.STUDIO_PASSWORD = 'a-new-fictitious-test-password';
   try {
     assert.equal(validSession(oldSession), false);
-    assert.equal((await verifyTotp('')).valid, false);
-    assert.equal((await verifyTotp('abc123')).valid, false);
-    const token = await generate({ secret: process.env.STUDIO_TOTP_SECRET });
-    const result = await verifyTotp(token);
-    assert.equal(result.valid, true);
-    if (result.valid) assert.ok(result.timeStep > 0);
-  } finally { delete process.env.STUDIO_TOTP_SECRET; }
+  } finally { process.env.STUDIO_PASSWORD = 'only-a-fictitious-test-password'; }
 });

@@ -12,4 +12,3 @@ CREATE TABLE IF NOT EXISTS studio_login_guard (
   locked_until timestamptz
 );
 INSERT INTO studio_login_guard (id) VALUES (1) ON CONFLICT DO NOTHING;
-ALTER TABLE studio_login_guard ADD COLUMN IF NOT EXISTS last_totp_step bigint;
