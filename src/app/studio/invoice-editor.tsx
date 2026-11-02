@@ -6,13 +6,14 @@ import { displayCents, emptyLine, lineTotal, linesForDraft, linesTotal, type Inv
 type Contact = { id: string; data: Record<string, string> };
 type Props = {
   data: Record<string, string>;
+  suggestedNumber: string | null;
   contacts: Contact[];
   onChange: (key: string, value: string) => void;
   onSelectClient: (id: string) => void;
   onLinesChange: (lines: InvoiceLine[]) => void;
 };
 
-export default function InvoiceEditor({ data, contacts, onChange, onSelectClient, onLinesChange }: Props) {
+export default function InvoiceEditor({ data, contacts, onChange, onSelectClient, onLinesChange, suggestedNumber }: Props) {
   const lines = linesForDraft(data);
   const changeLine = (index: number, field: keyof InvoiceLine, value: string) => onLinesChange(lines.map((line, i) => i === index ? { ...line, [field]: value } : line));
   const legacyTax = !!data.vat && Number(data.vat.replace(',', '.')) !== 0;
@@ -26,7 +27,7 @@ export default function InvoiceEditor({ data, contacts, onChange, onSelectClient
     <label className="invoice-field"><span>{label}</span><textarea rows={2} value={data[key] || ''} placeholder="Adresse à renseigner" onChange={event => onChange(key, event.target.value)} /></label>
   );
   return <div className="invoice-document">
-    <header className="invoice-document-head"><div><span className="invoice-kicker">DOCUMENT DE TRAVAIL</span><h3>Brouillon de facture</h3><p>Complète directement les informations ci-dessous.</p></div><span className="invoice-draft-tag">Brouillon</span></header>
+    <header className="invoice-document-head"><div><span className="invoice-kicker">DOCUMENT DE TRAVAIL</span><h3>Brouillon de facture</h3><p>Complète directement les informations ci-dessous.</p></div><span className="invoice-draft-tag">{data.invoiceNumber ? `N° ${data.invoiceNumber}` : suggestedNumber ? `N° ${suggestedNumber} proposé` : 'Numéro à configurer'}</span></header>
     <div className="invoice-parties">
       <section aria-labelledby="invoice-seller-title"><h4 id="invoice-seller-title">De</h4>
         <p className="invoice-seller">{data.seller || 'Coordonnées à renseigner dans « Mes coordonnées de facturation »'}{data.sellerAddress && <><br/>{data.sellerAddress}</>}{data.sellerSiret ? <><br/>SIRET : {data.sellerSiret}</> : data.siren ? <><br/>SIREN : {data.siren}</> : null}</p>
@@ -51,9 +52,9 @@ export default function InvoiceEditor({ data, contacts, onChange, onSelectClient
       </>}
     </div>
     <div className="invoice-dates">{input('serviceDate', 'Date de prestation', '', { type: 'date' })}{input('dueDate', 'Date limite de paiement', '', { type: 'date' })}</div>
-    <div className="invoice-payment"><h4>Paiement</h4><p>Par virement bancaire{data.iban ? <><br/>IBAN : {data.iban}</> : <><br/>IBAN à renseigner dans « Mes coordonnées de facturation »</>}</p></div>
+    <div className="invoice-payment"><h4>Paiement</h4><p>Par virement bancaire{data.iban ? <><br/>IBAN : {data.iban}</> : <><br/>IBAN à renseigner dans « Mes coordonnées de facturation »</>}</p><p className="invoice-thanks">Merci de votre confiance</p></div>
     <div className="invoice-tracking"><label className="invoice-field"><span>Paiement</span><select value={paymentStatus(data.status)} onChange={event => onChange('status', event.target.value)}><option>Non payé</option><option>Payé</option></select></label></div>
     <details className="invoice-details"><summary>Notes internes</summary><label className="invoice-field"><span>Notes</span><textarea rows={2} value={data.notes || ''} onChange={event => onChange('notes', event.target.value)} /></label></details>
-    <p className="invoice-footnote">Brouillon de travail, sans numéro ni émission de facture électronique.</p>
+    <p className="invoice-footnote">Brouillon de travail, sans émission de facture électronique.</p>
   </div>;
 }

@@ -20,3 +20,12 @@ test('old statuses remain understandable in the simplified paid state', () => {
   assert.equal(paymentStatus('À facturer'), 'Non payé');
   assert.equal(paymentStatus(), 'Non payé');
 });
+
+test('invoice numbering advances from the latest saved number', async () => {
+  const { nextInvoiceNumber } = await import('../src/lib/studio-profile');
+  assert.equal(nextInvoiceNumber('11'), 'INV012');
+  assert.equal(nextInvoiceNumber('99'), 'INV100');
+  assert.equal(nextInvoiceNumber(''), null);
+  assert.equal(nextInvoiceNumber('abc'), null);
+  assert.equal(nextInvoiceNumber('99999999'), null);
+});

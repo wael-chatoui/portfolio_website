@@ -151,3 +151,5 @@
 .invoice-add-line { color:#52694a; font-weight:700; }
 .invoice-grand-total { display:flex; justify-content:space-between; gap:16px; border-top:1px solid #d7dbd3; padding:18px 0 8px; margin-top:14px; font-weight:700; }
 @media(max-width:650px) { .invoice-line-amounts { grid-template-columns:1fr 1fr; } .invoice-line-total { grid-column:1/-1; grid-template-columns:1fr auto; align-items:center; } .invoice-line-total strong { padding:0; } }
+.invoice-payment .invoice-thanks { margin-top:14px; }
+@media(max-width:650px) { .studio-modal-actions { flex-wrap:wrap; } }

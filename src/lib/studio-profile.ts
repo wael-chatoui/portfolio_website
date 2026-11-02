@@ -8,3 +8,8 @@ export function newInvoice(profile: BillingProfile | null): Record<string, strin
 export function paymentStatus(value?: string): string {
   return value === 'Encaissé' || value === 'Payé' ? 'Payé' : 'Non payé';
 }
+
+export function nextInvoiceNumber(last?: string): string | null {
+  if (!last || !/^\d{1,8}$/.test(last) || Number(last) >= 99999999) return null;
+  return `INV${String(Number(last) + 1).padStart(3, '0')}`;
+}
