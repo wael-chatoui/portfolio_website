@@ -51,6 +51,11 @@
 .studio-project-icon { width:37px; height:37px; flex:none; display:grid; place-items:center; border-radius:8px; background:#282d28; color:#c7d6bd; }
 .studio-tag { padding:5px 9px; flex:none; border-radius:5px; color:#c3c9bd; background:#292f29; font-size:11px; }
 .studio-side-panel { padding:26px; }
+.studio-backup { max-width:760px; padding:28px; }
+.studio-backup p:not(.studio-eyebrow) { color:var(--s-muted); line-height:1.7; font-size:13px; margin:15px 0; }
+.studio-file-label { display:grid; gap:10px; color:var(--s-text); font-size:13px; }
+.studio-file-label input { color:var(--s-muted); max-width:100%; }
+.studio-backup .studio-backup-notice { color:#d2e1c4 !important; }
 .studio-side-panel p:not(.studio-eyebrow) { color:var(--s-muted); line-height:1.7; font-size:13px; margin:15px 0; }
 .studio-side-panel h3 { font-size:14px; margin:0; }
 .studio-divider { border-top:1px solid var(--s-line); margin:28px 0; }
