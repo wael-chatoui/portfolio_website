@@ -78,7 +78,17 @@ export default function Studio({ initiallyAuthenticated }: { initiallyAuthentica
   async function exportInvoice() {
     if (!editing || editing.kind !== 'invoice') return;
     if (!editing.id || !editing.data.issuedAt) { setError('Crée la facture avant de l’exporter.'); return; }
-    if (editing.data.historical === 'yes') { const link = document.createElement('a'); link.href = `/api/studio/original?id=${editing.id}`; link.download = editing.data.sourceName || 'facture-originale.pdf'; document.body.appendChild(link); link.click(); link.remove(); return; }
+    if (editing.data.historical === 'yes') {
+      setError('');
+      try {
+        const response = await fetch(`/api/studio/original?id=${editing.id}`, {cache:'no-store'});
+        if (!response.ok) throw new Error('Original indisponible');
+        const url = URL.createObjectURL(await response.blob());
+        const link = document.createElement('a'); link.href = url; link.download = editing.data.sourceName || 'facture-originale.pdf';
+        document.body.appendChild(link); link.click(); link.remove(); window.setTimeout(()=>URL.revokeObjectURL(url),1000);
+      } catch { setError('Le PDF original ne peut pas être téléchargé. Réessaie.'); }
+      return;
+    }
     if (editing.data.vat && Number(editing.data.vat.replace(',', '.')) !== 0) { setError('Cette facture ancienne contient de la TVA et ne peut pas être exporté avec ce modèle.'); return; }
     if (linesTotal(linesForDraft(editing.data)) === null) { setError('Renseigne le nom, une quantité positive et un prix valide pour chaque prestation avant l’export.'); return; }
     setError('');
