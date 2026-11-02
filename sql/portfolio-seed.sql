@@ -1,0 +1,20 @@
+-- Références visibles dans le portfolio local au 26 octobre 2026. Aucune priorité déduite.
+INSERT INTO studio_records (id, kind, data) VALUES
+('11111111-1111-4111-8111-111111111101','project','{"name":"PhraseLane","category":"Produit personnel","status":"À préciser","priority":"À définir","url":"https://fluent-flow.fr","notes":"Outil pour professeurs de français et élèves, présenté dans le portfolio."}'),
+('11111111-1111-4111-8111-111111111102','project','{"name":"Fluide","category":"Produit personnel","status":"À préciser","priority":"À définir","url":"https://fluide-ppl.vercel.app","notes":"Carnet d’entraînement présenté dans le portfolio."}'),
+('11111111-1111-4111-8111-111111111103','project','{"name":"La rédaction","category":"Produit personnel","status":"À préciser","priority":"À définir","url":"https://rss-intern-tool.vercel.app","notes":"Outil de veille et rédaction présenté dans le portfolio."}'),
+('11111111-1111-4111-8111-111111111104','project','{"name":"Miria.ai","category":"Réalisation","status":"À préciser","priority":"À définir","url":"https://miria.ai","notes":"Chat, abonnements et workflows CRM, selon le portfolio."}'),
+('11111111-1111-4111-8111-111111111105','project','{"name":"Lead Generation CRM","category":"Outil interne","status":"À préciser","priority":"À définir","notes":"Outil interne d’acquisition présenté dans le portfolio."}'),
+('11111111-1111-4111-8111-111111111106','project','{"name":"Attio Bridge","category":"Réalisation","status":"À préciser","priority":"À définir","notes":"Extension et backend de synchronisation CRM présentés dans le portfolio."}'),
+('11111111-1111-4111-8111-111111111107','project','{"name":"Niko’ Life Rent","category":"Réalisation","status":"À préciser","priority":"À définir","url":"https://nikolife-rent.com"}'),
+('11111111-1111-4111-8111-111111111108','project','{"name":"Flashscore Scraper","category":"Réalisation","status":"À préciser","priority":"À définir","url":"https://github.com/wael-chatoui/flashscore-scraper"}'),
+('11111111-1111-4111-8111-111111111109','project','{"name":"AI Call / Blackbox","category":"Réalisation","status":"À préciser","priority":"À définir","url":"https://github.com/wael-chatoui/AI-CALL-Blackbox"}'),
+('11111111-1111-4111-8111-111111111110','project','{"name":"Antalyzr / AI Tinkerers Paris","category":"Réalisation","status":"À préciser","priority":"À définir","notes":"Hackathon présenté dans le portfolio."}'),
+('11111111-1111-4111-8111-111111111111','project','{"name":"Fitlens / Specs in the City","category":"Réalisation","status":"À préciser","priority":"À définir","notes":"Hackathon présenté dans le portfolio."}'),
+('11111111-1111-4111-8111-111111111112','project','{"name":"Vigil / CND Défense","category":"Réalisation","status":"À préciser","priority":"À définir","url":"https://github.com/hindkh21/HACKATHON_CND_TEAM3","notes":"Hackathon présenté dans le portfolio."}'),
+('11111111-1111-4111-8111-111111111113','project','{"name":"HackTheFork","category":"Réalisation","status":"À préciser","priority":"À définir","url":"https://github.com/wael-chatoui/HackTheFork","notes":"Hackathon présenté dans le portfolio."}'),
+('11111111-1111-4111-8111-111111111114','project','{"name":"Minishell","category":"Réalisation","status":"À préciser","priority":"À définir","url":"https://github.com/wael-chatoui/42-minishell","notes":"Projet 42 présenté dans le portfolio."}'),
+('11111111-1111-4111-8111-111111111115','project','{"name":"Philosophers","category":"Réalisation","status":"À préciser","priority":"À définir","url":"https://github.com/wael-chatoui/42-philo","notes":"Projet 42 présenté dans le portfolio."}'),
+('11111111-1111-4111-8111-111111111116','project','{"name":"FdF","category":"Réalisation","status":"À préciser","priority":"À définir","url":"https://github.com/wael-chatoui/42-FdF","notes":"Projet 42 présenté dans le portfolio."}'),
+('11111111-1111-4111-8111-111111111117','project','{"name":"Glint","category":"Réalisation","status":"À préciser","priority":"À définir","notes":"Travail privé présenté dans le portfolio."}')
+ON CONFLICT (id) DO NOTHING;
