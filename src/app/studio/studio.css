@@ -135,3 +135,9 @@
 .invoice-dates,.invoice-tracking { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
 .invoice-footnote { border-top:1px solid #d7dbd3; margin-top:20px; padding-top:15px; }
 @media(max-width:650px) { .invoice-document { padding:20px; } .invoice-parties,.invoice-service-row,.invoice-dates,.invoice-tracking { grid-template-columns:1fr; gap:4px; } .invoice-parties { gap:20px; } .invoice-field input,.invoice-field textarea,.invoice-field select { font-size:16px; } }
+.studio-profile { margin:0 0 18px; padding:16px; border:1px solid var(--s-line); border-radius:8px; background:var(--s-surface); }
+.studio-profile summary { cursor:pointer; color:#d2e1c4; font-size:13px; font-weight:600; }
+.studio-profile p { color:var(--s-muted); font-size:12px; line-height:1.5; margin:14px 0; }
+.studio-profile form > button { margin-top:16px; }
+.invoice-seller,.invoice-payment p { white-space:pre-line; font-size:14px; line-height:1.6; overflow-wrap:anywhere; margin:0; }
+.invoice-payment { border-top:1px solid #d7dbd3; margin:12px 0 18px; padding-top:18px; }

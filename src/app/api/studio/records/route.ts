@@ -1,6 +1,7 @@
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 import { randomUUID } from 'node:crypto';
+import { billingProfileId } from '@/lib/studio-profile';
 import { clean, cookieName, db, kinds, sameOrigin, validSession, type Kind } from '@/lib/studio';
 
 export const dynamic = 'force-dynamic';
@@ -8,7 +9,7 @@ async function allowed() { return validSession((await cookies()).get(cookieName)
 const unauthorized = () => NextResponse.json({ error: 'Session expirée. Reconnecte-toi.' }, { status: 401 });
 export async function GET() {
   if (!await allowed()) return unauthorized();
-  try { const result = await db().query('SELECT id, kind, data, updated_at FROM studio_records ORDER BY updated_at DESC'); return NextResponse.json({ records: result.rows }, { headers: { 'Cache-Control': 'private, no-store' } }); }
+  try { const result = await db().query('SELECT id, kind, data, updated_at FROM studio_records WHERE id <> $1 ORDER BY updated_at DESC', [billingProfileId]); return NextResponse.json({ records: result.rows }, { headers: { 'Cache-Control': 'private, no-store' } }); }
   catch { return NextResponse.json({ error: 'Impossible de charger les données. Vérifie la connexion à la base.' }, { status: 503 }); }
 }
 export async function POST(request: Request) {
@@ -19,6 +20,7 @@ export async function POST(request: Request) {
     if (!kinds.includes(kind)) return NextResponse.json({ error: 'Type inconnu.' }, { status: 400 });
     const data = clean(kind, body.data); if (!data) return NextResponse.json({ error: 'Vérifie le nom et les champs saisis.' }, { status: 400 });
     const id = body.id || randomUUID();
+    if (id === billingProfileId || data.role === 'billing-profile') return NextResponse.json({ error: 'Élément réservé.' }, { status: 400 });
     if (typeof id !== 'string' || !/^[0-9a-f-]{36}$/i.test(id)) return NextResponse.json({ error: 'Identifiant invalide.' }, { status: 400 });
     const result = body.id
       ? await db().query('UPDATE studio_records SET data = $1, updated_at = now() WHERE id = $2 AND kind = $3 RETURNING id', [data, id, kind])
@@ -31,6 +33,6 @@ export async function DELETE(request: Request) {
   if (!sameOrigin(request)) return NextResponse.json({ error: 'Requête refusée.' }, { status: 403 });
   if (!await allowed()) return unauthorized();
   try { const { id } = await request.json(); if (typeof id !== 'string' || !/^[0-9a-f-]{36}$/i.test(id)) return NextResponse.json({ error: 'Identifiant invalide.' }, { status: 400 });
-    await db().query('DELETE FROM studio_records WHERE id = $1', [id]); return NextResponse.json({ ok: true });
+    await db().query('DELETE FROM studio_records WHERE id = $1 AND id <> $2', [id, billingProfileId]); return NextResponse.json({ ok: true });
   } catch { return NextResponse.json({ error: 'Suppression impossible.' }, { status: 503 }); }
 }
