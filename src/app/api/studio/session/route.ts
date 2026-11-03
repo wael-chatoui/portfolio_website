@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { configured, cookieName, db, emailMatches, makeSession, passwordMatches, sameOrigin } from '@/lib/studio';
+import { analyticsExclusionCookie, analyticsPreferenceMaxAge } from '@/lib/analytics-policy';
 
 export const dynamic = 'force-dynamic';
 export async function POST(request: Request) {
@@ -25,6 +26,7 @@ export async function POST(request: Request) {
       await client.query('COMMIT');
       const response = NextResponse.json({ ok: true });
       response.cookies.set(cookieName, makeSession(), { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'strict', path: '/', maxAge: 43200 });
+      response.cookies.set(analyticsExclusionCookie, '1', { secure: process.env.NODE_ENV === 'production', sameSite: 'lax', path: '/', maxAge: analyticsPreferenceMaxAge });
       return response;
     } catch (error) { await client.query('ROLLBACK'); throw error; } finally { client.release(); }
   } catch { return NextResponse.json({ error: 'Connexion indisponible. Vérifie la base Studio.' }, { status: 503 }); }

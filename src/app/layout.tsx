@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
+import { Suspense } from 'react';
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages, getTranslations } from 'next-intl/server';
 import { syne, dmSans } from "@/app/font";
 import MotionProvider from '@/components/motion-provider';
 import { siteUrl, isProduction } from '@/lib/site';
+import SiteAnalytics from '@/components/site-analytics';
 import "./globals.css";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -40,6 +42,7 @@ export default async function RootLayout({
             {children}
           </MotionProvider>
         </NextIntlClientProvider>
+        <Suspense fallback={null}><SiteAnalytics enabled={isProduction}/></Suspense>
       </body>
     </html>
   );
