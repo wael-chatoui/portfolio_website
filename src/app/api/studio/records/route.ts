@@ -40,7 +40,8 @@ export async function POST(request: Request) {
       const previous = previousResult?.rows[0]?.data;
       if (previous?.issuedAt) {
         const status = ['Payé', 'Non payé'].includes(data.status) ? data.status : previous.status;
-        const updated = { ...previous, status, paymentUnconfirmed: data.paymentUnconfirmed === 'yes' ? 'yes' : '' };
+        const language = previous.historical === 'yes' ? previous.language || 'fr' : data.language || previous.language || 'fr';
+        const updated = { ...previous, language, status, paymentUnconfirmed: data.paymentUnconfirmed === 'yes' ? 'yes' : '' };
         await client.query("UPDATE studio_records SET data = $1, updated_at = now() WHERE id = $2", [updated, id]);
         await client.query('COMMIT'); return NextResponse.json({ id });
       }

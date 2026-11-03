@@ -1,19 +1,22 @@
 import { jsPDF } from 'jspdf';
 import { displayCents, lineTotal, linesForDraft, linesTotal } from './studio-invoice-lines';
 
-const formatDate = (value?: string) => value && /^\d{4}-\d{2}-\d{2}$/.test(value) ? value.split('-').reverse().join('/') : 'À renseigner';
-const supplied = (value?: string) => value || 'À renseigner';
+import { invoiceLanguage, invoiceText, invoiceDate, invoiceQuantity, invoiceTermsText } from './studio-invoice-i18n';
 
 /** Create a selectable, paginated PDF from the recorded invoice and an embedded font. */
 export function createInvoicePdf(data: Record<string, string>, font: Uint8Array): ArrayBuffer {
   const lines = linesForDraft(data);
+  const language = invoiceLanguage(data.language); const t = invoiceText[language];
+  const terms = invoiceTermsText(data, language);
+  const supplied = (value?: string) => value || t.missing;
+  const formatDate = (value?: string) => invoiceDate(value, language);
   const doc = new jsPDF({ unit: 'pt', format: 'a4', compress: true });
   let binary = '';
   for (let i = 0; i < font.length; i += 8192) binary += String.fromCharCode(...font.subarray(i, i + 8192));
   doc.addFileToVFS('NotoSans.ttf', btoa(binary));
   doc.addFont('NotoSans.ttf', 'NotoSans', 'normal');
   doc.setFont('NotoSans');
-  doc.setProperties({ title: `Facture ${data.invoiceNumber || ''}`.trim() });
+  doc.setProperties({ title: `${t.invoice} ${data.invoiceNumber || ''}`.trim() });
   const width = doc.internal.pageSize.getWidth(); const height = doc.internal.pageSize.getHeight();
   const left = 46; const right = width - left; const contentWidth = right - left;
   const ink = '#243022'; const muted = '#65745f'; const lineColor = '#cbd2c7';
@@ -27,21 +30,20 @@ export function createInvoicePdf(data: Record<string, string>, font: Uint8Array)
     doc.text(parts, x, yy, { lineHeightFactor: 1.35 });
     return yy + parts.length * size * 1.35;
   };
-  smallHeading('Prestations de services', left, y);
-  doc.setTextColor(ink); doc.setFontSize(22); doc.text('Facture', left, y + 28);
+  doc.setTextColor(ink); doc.setFontSize(22); doc.text(t.invoice, left, y + 28);
   doc.setFontSize(10); doc.setTextColor(muted); doc.text(formatDate(data.issueDate), right, y + 5, { align: 'right' });
-  if (data.invoiceNumber) { doc.setFontSize(11); doc.setTextColor(ink); doc.text(`N° ${data.invoiceNumber}`, right, y + 27, { align: 'right' }); }
+  if (data.invoiceNumber) { doc.setFontSize(11); doc.setTextColor(ink); doc.text(`${t.numberPrefix} ${data.invoiceNumber}`, right, y + 27, { align: 'right' }); }
   y += 50; rule(y); y += 26;
   const columnWidth = (contentWidth - 28) / 2;
-  smallHeading('De', left, y); smallHeading('À', left + columnWidth + 28, y);
-  const seller = [supplied(data.seller), supplied(data.sellerAddress), data.sellerSiret ? `SIRET : ${data.sellerSiret}` : data.siren ? `SIREN : ${data.siren}` : 'SIRET à renseigner'].join('\n');
+  smallHeading(t.from, left, y); smallHeading(t.to, left + columnWidth + 28, y);
+  const seller = [supplied(data.seller), supplied(data.sellerAddress), data.sellerSiret ? `SIRET : ${data.sellerSiret}` : data.siren ? `SIREN : ${data.siren}` : `SIRET : ${t.missing}`].join('\n');
   const client = [supplied(data.client), supplied(data.clientAddress), data.clientSiret ? `SIRET : ${data.clientSiret}` : data.clientSiren ? `SIREN : ${data.clientSiren}` : ''].filter(Boolean).join('\n');
   const y1 = wrapped(seller, left, y + 18, columnWidth); let y2 = wrapped(client, left + columnWidth + 28, y + 18, columnWidth);
-  if (data.clientWarning || data.clientAddressSource === 'registered') y2 = wrapped('Coordonnées de facturation à vérifier.', left + columnWidth + 28, y2 + 7, columnWidth, 9);
+  if (data.clientWarning || data.clientAddressSource === 'registered') y2 = wrapped(t.billingCheck, left + columnWidth + 28, y2 + 7, columnWidth, 9);
   y = Math.max(y1, y2) + 25;
-  if (data.purchaseOrder) { y = wrapped(`Bon de commande : ${data.purchaseOrder}`, left, y, contentWidth, 9) + 12; }
+  if (data.purchaseOrder) { y = wrapped(`${t.poShort} : ${data.purchaseOrder}`, left, y, contentWidth, 9) + 12; }
   const cols = [left + contentWidth * .57, left + contentWidth * .72, left + contentWidth * .86, right];
-  const header = () => { smallHeading('Prestation', left, y); smallHeading('Qté', cols[1] - 10, y, 'right'); smallHeading('Prix', cols[2] - 10, y, 'right'); smallHeading('Total', right, y, 'right'); y += 11; rule(y); y += 17; };
+  const header = () => { smallHeading(t.service, left, y); smallHeading(t.quantityShort, cols[1] - 10, y, 'right'); smallHeading(t.price, cols[2] - 10, y, 'right'); smallHeading(t.total, right, y, 'right'); y += 11; rule(y); y += 17; };
   ensure(80); header();
   for (const line of lines) {
     doc.setFontSize(10);
@@ -53,20 +55,20 @@ export function createInvoicePdf(data: Record<string, string>, font: Uint8Array)
     doc.setFontSize(10); doc.setTextColor(ink); doc.text(name, left, y, { lineHeightFactor: 1.4 });
     if (description.length) { doc.setFontSize(9); doc.setTextColor(muted); doc.text(description, left, y + name.length * 14, { lineHeightFactor: 1.33 }); }
     doc.setFontSize(9); doc.setTextColor(ink);
-    doc.text(line.quantity, cols[1] - 10, y, { align: 'right' });
-    doc.text(displayCents(lineTotal({ ...line, quantity: '1' })), cols[2] - 10, y, { align: 'right' });
-    doc.text(displayCents(lineTotal(line)), right, y, { align: 'right' });
+    doc.text(invoiceQuantity(line.quantity, language), cols[1] - 10, y, { align: 'right' });
+    doc.text(displayCents(lineTotal({ ...line, quantity: '1' }), language), cols[2] - 10, y, { align: 'right' });
+    doc.text(displayCents(lineTotal(line), language), right, y, { align: 'right' });
     y += rowHeight; rule(y - 5); y += 10;
   }
-  ensure(270); y += 12; doc.setFontSize(10); doc.setTextColor(ink); doc.text('Total HT', left, y); doc.text(displayCents(linesTotal(lines)), right, y, { align: 'right' });
-  y += 22; doc.setFontSize(14); doc.text('Total à payer', left, y); doc.text(displayCents(linesTotal(lines)), right, y, { align: 'right' });
-  y = wrapped('TVA non applicable, art. 293 B du CGI.', left, y + 23, contentWidth, 9);
-  y += 34; smallHeading('Date de prestation', left, y); smallHeading('Échéance', left + columnWidth + 28, y);
+  ensure(270); y += 12; doc.setFontSize(10); doc.setTextColor(ink); doc.text(t.subtotal, left, y); doc.text(displayCents(linesTotal(lines), language), right, y, { align: 'right' });
+  y += 22; doc.setFontSize(14); doc.text(t.amountDue, left, y); doc.text(displayCents(linesTotal(lines), language), right, y, { align: 'right' });
+  y = wrapped(t.exemption, left, y + 23, contentWidth, 9);
+  y += 34; smallHeading(t.serviceDate, left, y); smallHeading(t.dueHeading, left + columnWidth + 28, y);
   doc.setFontSize(10); doc.setTextColor(ink); doc.text(formatDate(data.serviceDate), left, y + 18); doc.text(formatDate(data.dueDate), left + columnWidth + 28, y + 18);
-  y += 48; rule(y); y += 24; smallHeading('Paiement par virement bancaire', left, y);
+  y += 48; rule(y); y += 24; smallHeading(t.bankTransfer, left, y);
   y = wrapped(`IBAN : ${supplied(data.iban)}`, left, y + 18, contentWidth, 10);
-  y = wrapped('Merci de votre confiance', left, y + 12, contentWidth, 10) + 20;
-  for (const term of [data.discountTerms, data.latePenalty, data.recoveryTerms].filter(Boolean)) {
+  y = wrapped(t.thanks, left, y + 12, contentWidth, 10) + 20;
+  for (const term of [terms.discountTerms, terms.latePenalty, terms.recoveryTerms].filter(Boolean)) {
     doc.setFontSize(8);
     const rows: string[] = doc.splitTextToSize(term, contentWidth);
     ensure(rows.length * 11 + 9);
@@ -76,7 +78,7 @@ export function createInvoicePdf(data: Record<string, string>, font: Uint8Array)
   const pages = doc.getNumberOfPages();
   for (let page = 1; page <= pages; page++) {
     doc.setPage(page); doc.setFontSize(8); doc.setTextColor(muted);
-    doc.text(`Facture ${data.invoiceNumber || ''}`, left, height - 34);
+    doc.text(`${t.invoice} ${data.invoiceNumber || ''}`, left, height - 34);
     doc.text(`${page} / ${pages}`, right, height - 34, { align: 'right' });
   }
   return doc.output('arraybuffer');
@@ -87,6 +89,6 @@ export async function downloadInvoicePdf(data: Record<string, string>): Promise<
   if (!response.ok) throw new Error('Police indisponible');
   const bytes = createInvoicePdf(data, new Uint8Array(await response.arrayBuffer()));
   const url = URL.createObjectURL(new Blob([bytes], { type: 'application/pdf' }));
-  const link = document.createElement('a'); link.href = url; link.download = `facture-${(data.invoiceNumber || 'sans-numero').replace(/[^A-Za-z0-9._-]/g, '-')}.pdf`;
+  const link = document.createElement('a'); link.href = url; link.download = `${invoiceLanguage(data.language) === 'en' ? 'invoice' : 'facture'}-${(data.invoiceNumber || 'sans-numero').replace(/[^A-Za-z0-9._-]/g, '-')}.pdf`;
   document.body.appendChild(link); link.click(); link.remove(); window.setTimeout(() => URL.revokeObjectURL(url), 1000);
 }

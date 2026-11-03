@@ -43,4 +43,4 @@ export function linesForDraft(data: Record<string, string>): InvoiceLine[] {
   return (data.items && parseLines(data.items)) || (data.name || data.amount ? [{ name: data.name || '', description: '', quantity: '1', unitPrice: data.amount || '' }] : [emptyLine()]);
 }
 export function formatCents(cents: number): string { return `${Math.floor(cents / 100)}.${String(cents % 100).padStart(2, '0')}`; }
-export function displayCents(cents: number | null): string { return cents === null ? 'À calculer' : new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(cents / 100); }
+export function displayCents(cents: number | null, language: 'fr' | 'en' = 'fr'): string { return cents === null ? (language === 'en' ? 'Pending calculation' : 'À calculer') : new Intl.NumberFormat(language === 'en' ? 'en-GB' : 'fr-FR', { style: 'currency', currency: 'EUR' }).format(cents / 100); }
