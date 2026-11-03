@@ -38,6 +38,13 @@ test('writes accept only matching request origin', () => {
   assert.equal(sameOrigin(new Request('https://example.com/api/studio', { headers: { origin: 'https://other.example' } })), false);
   assert.equal(sameOrigin(new Request('https://example.com/api/studio')), false);
 });
+test('declaration tracking defaults to unchecked for older invoices and accepts only explicit supported values', () => {
+  assert.equal(clean('invoice', { name: 'Ancienne facture' })?.declared, '');
+  assert.equal(clean('invoice', { name: 'Facture', declared: 'yes' })?.declared, 'yes');
+  assert.equal(clean('invoice', { name: 'Facture', declared: '' })?.declared, '');
+  assert.equal(clean('invoice', { name: 'Facture', declared: 'no' }), null);
+  assert.equal(clean('invoice', { name: 'Facture', declared: true }), null);
+});
 test('only the configured email is accepted and changing credentials invalidates old sessions', () => {
   const oldSession = makeSession();
   assert.equal(emailMatches(' CHATouI.Wael40@gmail.com '), true);

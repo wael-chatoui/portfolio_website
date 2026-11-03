@@ -39,9 +39,12 @@ export async function POST(request: Request) {
       if (body.id && !previousResult?.rowCount) { await client.query('ROLLBACK'); return NextResponse.json({ error: 'Élément introuvable.' }, { status: 404 }); }
       const previous = previousResult?.rows[0]?.data;
       if (previous?.issuedAt) {
+        const declared = Object.hasOwn(body.data, 'declared') ? data.declared : previous.declared || '';
         const status = ['Payé', 'Non payé'].includes(data.status) ? data.status : previous.status;
         const language = previous.historical === 'yes' ? previous.language || 'fr' : data.language || previous.language || 'fr';
-        const updated = { ...previous, language, status, paymentUnconfirmed: data.paymentUnconfirmed === 'yes' ? 'yes' : '' };
+        const updated = body.update === 'declaration'
+          ? { ...previous, declared }
+          : { ...previous, declared, language, status, paymentUnconfirmed: data.paymentUnconfirmed === 'yes' ? 'yes' : '' };
         await client.query("UPDATE studio_records SET data = $1, updated_at = now() WHERE id = $2", [updated, id]);
         await client.query('COMMIT'); return NextResponse.json({ id });
       }

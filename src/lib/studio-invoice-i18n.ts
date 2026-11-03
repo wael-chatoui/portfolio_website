@@ -12,9 +12,9 @@ const fr = {
   po:'Bon de commande, si fourni', poShort:'Bon de commande', discount:'Escompte', latePenalty:'Pénalités de retard', conditions:'Conditions de facturation',
   selectClient:'Choisir un client', manualClient:'Saisie manuelle', otherDetails:'Autres coordonnées du client', clientName:'Nom du client', clientAddress:'Adresse du client',
   clientSiret:'SIRET du client', clientSiren:'SIREN du client', clientEmail:'E-mail du client',
-  addService:'+ Ajouter une prestation', removeService:'Supprimer cette prestation', paid:'Payé', unpaid:'Non payé', unconfirmed:'À confirmer',
+  addService:'+ Ajouter une prestation', removeService:'Supprimer cette prestation', paid:'Payé', unpaid:'Non payé', unconfirmed:'À confirmer', declared:'Déclaré', toDeclare:'À déclarer', declarationDone:'Déclaration effectuée',
   namePlaceholder:'Ex. Création de site', descriptionPlaceholder:'Détail de la prestation',
-  editPrompt:'Complète les informations puis crée la facture.', saved:'Facture enregistrée. Langue et paiement restent modifiables.',
+  editPrompt:'Complète les informations puis crée la facture.', saved:'Facture enregistrée. Langue, paiement et déclaration restent modifiables.',
   numberHelp:'Proposé automatiquement, modifiable avant création.',
 };
 const en: Record<keyof typeof fr, string> = {
@@ -27,9 +27,9 @@ const en: Record<keyof typeof fr, string> = {
   po:'Purchase order, if supplied', poShort:'Purchase order', discount:'Early payment discount', latePenalty:'Late payment interest', conditions:'Payment terms',
   selectClient:'Select a client', manualClient:'Manual entry', otherDetails:'Other client details', clientName:'Client name', clientAddress:'Client address',
   clientSiret:'Client SIRET', clientSiren:'Client SIREN', clientEmail:'Client email',
-  addService:'+ Add a service', removeService:'Remove this service', paid:'Paid', unpaid:'Unpaid', unconfirmed:'To be confirmed',
+  addService:'+ Add a service', removeService:'Remove this service', paid:'Paid', unpaid:'Unpaid', unconfirmed:'To be confirmed', declared:'Declared', toDeclare:'To declare', declarationDone:'Declaration completed',
   namePlaceholder:'e.g. Website development', descriptionPlaceholder:'Service details',
-  editPrompt:'Complete the details, then create the invoice.', saved:'Invoice saved. Language and payment status can be updated.',
+  editPrompt:'Complete the details, then create the invoice.', saved:'Invoice saved. Language, payment and declaration status can be updated.',
   numberHelp:'Suggested automatically; editable before creation.',
 };
 export const invoiceText = { fr, en };
