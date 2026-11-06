@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { clean } from '../src/lib/studio';
-import { lineTotal, linesForDraft, linesTotal, formatCents, parseLines } from '../src/lib/studio-invoice-lines';
+import { invoiceBillingMode, lineTotal, linesForDraft, linesTotal, formatCents, parseLines } from '../src/lib/studio-invoice-lines';
 
 test('quantities, cents and rounding produce the expected invoice total', () => {
   const lines = [{ name: 'Site', description: 'Création', quantity: '3', unitPrice: '70,00' }, { name: 'Maintenance', description: 'Suivi', quantity: '1,5', unitPrice: '30.10' }];
@@ -30,4 +30,15 @@ test('previous drafts remain editable as one line', () => {
   assert.deepEqual(lines[0], { name: 'Ancienne mission', description: '', quantity: '1', unitPrice: '42,50' });
   assert.equal(linesTotal(lines), 4250);
   assert.equal(clean('invoice', { name: 'Ancienne mission', amount: '42,50' })?.amount, '42,50');
+});
+
+test('daily billing keeps fractional days and exact money, with compatible service defaults', () => {
+  assert.equal(invoiceBillingMode(undefined), 'services');
+  assert.equal(invoiceBillingMode('daily'), 'daily');
+  const items = JSON.stringify([{ name: 'Mission', description: 'Période convenue', quantity: '2,5', unitPrice: '420' }]);
+  const data = { name: 'Mission', billingMode: 'daily', items, amount: '1050' };
+  assert.equal(clean('invoice', data)?.billingMode, 'daily');
+  assert.equal(clean('invoice', { ...data, billingMode: 'hourly' }), null);
+  assert.equal(clean('invoice', { ...data, amount: '1049.99' }), null);
+  assert.equal(linesTotal(linesForDraft(data)), 105000);
 });

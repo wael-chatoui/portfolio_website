@@ -3,7 +3,7 @@ export const billingProfileId = '18f147f3-e2bd-4c42-9c0c-9652e2d55881';
 export type BillingProfile = Record<string, string>;
 
 export function newInvoice(profile: BillingProfile | null): Record<string, string> {
-  return { ...invoiceTerms, language:'fr', issueDate: parisDate(), seller: profile?.name ? (/\bEI\b|entrepreneur individuel/i.test(profile.name) ? profile.name : profile.name + ' EI') : '', sellerAddress: profile?.registeredAddress || '', siren: profile?.siren || '', sellerSiret: profile?.siret || '', iban: profile?.iban || '', paymentTerms: 'Paiement par virement bancaire', status: 'Non payé' };
+  return { ...invoiceTerms, language:'fr', billingMode:'services', issueDate: parisDate(), seller: profile?.name ? (/\bEI\b|entrepreneur individuel/i.test(profile.name) ? profile.name : profile.name + ' EI') : '', sellerAddress: profile?.registeredAddress || '', siren: profile?.siren || '', sellerSiret: profile?.siret || '', iban: profile?.iban || '', paymentTerms: 'Paiement par virement bancaire', status: 'Non payé' };
 }
 
 export function editableInvoice(data: Record<string,string>, profile: BillingProfile | null): Record<string,string> {

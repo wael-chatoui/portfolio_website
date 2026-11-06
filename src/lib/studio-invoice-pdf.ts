@@ -1,5 +1,5 @@
 import { jsPDF } from 'jspdf';
-import { displayCents, lineTotal, linesForDraft, linesTotal } from './studio-invoice-lines';
+import { displayCents, invoiceBillingMode, lineTotal, linesForDraft, linesTotal } from './studio-invoice-lines';
 
 import { invoiceLanguage, invoiceText, invoiceDate, invoiceQuantity, invoiceTermsText } from './studio-invoice-i18n';
 
@@ -8,6 +8,7 @@ export function createInvoicePdf(data: Record<string, string>, font: Uint8Array)
   const lines = linesForDraft(data);
   const language = invoiceLanguage(data.language); const t = invoiceText[language];
   const terms = invoiceTermsText(data, language);
+  const daily = invoiceBillingMode(data.billingMode) === 'daily';
   const supplied = (value?: string) => value || t.missing;
   const formatDate = (value?: string) => invoiceDate(value, language);
   const doc = new jsPDF({ unit: 'pt', format: 'a4', compress: true });
@@ -38,12 +39,11 @@ export function createInvoicePdf(data: Record<string, string>, font: Uint8Array)
   smallHeading(t.from, left, y); smallHeading(t.to, left + columnWidth + 28, y);
   const seller = [supplied(data.seller), supplied(data.sellerAddress), data.sellerSiret ? `SIRET : ${data.sellerSiret}` : data.siren ? `SIREN : ${data.siren}` : `SIRET : ${t.missing}`].join('\n');
   const client = [supplied(data.client), supplied(data.clientAddress), data.clientSiret ? `SIRET : ${data.clientSiret}` : data.clientSiren ? `SIREN : ${data.clientSiren}` : ''].filter(Boolean).join('\n');
-  const y1 = wrapped(seller, left, y + 18, columnWidth); let y2 = wrapped(client, left + columnWidth + 28, y + 18, columnWidth);
-  if (data.clientWarning || data.clientAddressSource === 'registered') y2 = wrapped(t.billingCheck, left + columnWidth + 28, y2 + 7, columnWidth, 9);
+  const y1 = wrapped(seller, left, y + 18, columnWidth); const y2 = wrapped(client, left + columnWidth + 28, y + 18, columnWidth);
   y = Math.max(y1, y2) + 25;
   if (data.purchaseOrder) { y = wrapped(`${t.poShort} : ${data.purchaseOrder}`, left, y, contentWidth, 9) + 12; }
   const cols = [left + contentWidth * .57, left + contentWidth * .72, left + contentWidth * .86, right];
-  const header = () => { smallHeading(t.service, left, y); smallHeading(t.quantityShort, cols[1] - 10, y, 'right'); smallHeading(t.price, cols[2] - 10, y, 'right'); smallHeading(t.total, right, y, 'right'); y += 11; rule(y); y += 17; };
+  const header = () => { smallHeading(daily ? t.mission : t.service, left, y); smallHeading(daily ? t.daysShort : t.quantityShort, cols[1] - 10, y, 'right'); smallHeading(daily ? t.dailyRateShort : t.price, cols[2] - 10, y, 'right'); smallHeading(t.total, right, y, 'right'); y += 11; rule(y); y += 17; };
   ensure(80); header();
   for (const line of lines) {
     doc.setFontSize(10);

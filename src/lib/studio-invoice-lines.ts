@@ -1,4 +1,6 @@
 export type InvoiceLine = { name: string; description: string; quantity: string; unitPrice: string };
+export type InvoiceBillingMode = 'services' | 'daily';
+export const invoiceBillingMode = (value?: string): InvoiceBillingMode => value === 'daily' ? 'daily' : 'services';
 export const emptyLine = (): InvoiceLine => ({ name: '', description: '', quantity: '1', unitPrice: '' });
 
 function decimalUnits(value: string, wholeDigits: number): bigint | null {
