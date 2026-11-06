@@ -11,6 +11,7 @@ test('new drafts take a private snapshot of billing details', () => {
   assert.equal(invoice.sellerSiret, '12345678900012');
   assert.equal(invoice.paymentTerms, 'Paiement par virement bancaire');
   assert.equal(invoice.status, 'Non payé');
+  assert.equal(invoice.billingMode, 'daily');
   assert.equal(clean('invoice', { ...invoice, name: 'Mission' })?.iban, invoice.iban);
   assert.equal(clean('contact', { ...profile, role: 'billing-profile' })?.role, 'billing-profile');
 });
@@ -36,6 +37,7 @@ test('previous preparations receive the fields needed for creation without chang
   const editable = editableInvoice(old,null);
   assert.equal(editable.seller,'Entreprise Exemple EI');
   assert.equal(editable.invoiceNumber,'INV012');
+  assert.equal(editable.billingMode,'services');
   assert.equal(editable.taxRegime,'franchise');
   assert.match(editable.issueDate,/^\d{4}-\d{2}-\d{2}$/);
   assert.equal(old.seller,'Entreprise Exemple');
