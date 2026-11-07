@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { followingInvoiceNumber, invoiceIssueError, invoiceNumberKey, invoiceTerms } from '../src/lib/studio-invoice-policy';
+import { dueDateIn30Days, followingInvoiceNumber, invoiceIssueError, invoiceNumberKey, invoiceTerms } from '../src/lib/studio-invoice-policy';
 
 const invoice = { ...invoiceTerms, name:'Prestation exemple', seller:'Entreprise Exemple EI',sellerAddress:'1 rue Exemple',sellerSiret:'12345678900012',client:'Société Exemple',clientAddress:'2 rue Exemple',iban:'FR0000000000000000000000000',issueDate:'2020-02-28',serviceDate:'2020-02-28',dueDate:'2020-03-28',amount:'420',items:JSON.stringify([{name:'Mission',description:'',quantity:'2',unitPrice:'210'}]) };
 
@@ -25,4 +25,12 @@ test('impossible dates, past due dates and future issue dates are refused', () =
   assert.notEqual(invoiceIssueError({...invoice,dueDate:'2020-02-27'}),null);
   assert.notEqual(invoiceIssueError({...invoice,issueDate:'2099-01-01',dueDate:'2099-02-01'}),null);
   assert.equal(invoiceIssueError({...invoice,serviceDate:'2020-02-29'}),null);
+});
+
+test('a 30-day due date crosses month, year and leap day boundaries', () => {
+  assert.equal(dueDateIn30Days('2026-11-07'), '2026-12-07');
+  assert.equal(dueDateIn30Days('2026-12-20'), '2027-01-19');
+  assert.equal(dueDateIn30Days('2028-01-30'), '2028-02-29');
+  assert.equal(dueDateIn30Days('2026-02-30'), '');
+  assert.equal(dueDateIn30Days(''), '');
 });

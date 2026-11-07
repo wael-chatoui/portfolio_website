@@ -1,6 +1,6 @@
 'use client';
 
-import { invoiceLanguage, invoiceText, invoiceTermsText } from '@/lib/studio-invoice-i18n';
+import { invoiceDate, invoiceLanguage, invoiceText, invoiceTermsText } from '@/lib/studio-invoice-i18n';
 import InvoiceOriginalUpload from './invoice-original-upload';
 import { paymentStatus } from '@/lib/studio-profile';
 import { displayCents, emptyLine, invoiceBillingMode, lineTotal, linesForDraft, linesTotal, type InvoiceLine } from '@/lib/studio-invoice-lines';
@@ -19,6 +19,7 @@ type Props = {
 export default function InvoiceEditor({ data, contacts, onChange, onSelectClient, onLinesChange, suggestedNumber, onOriginal }: Props) {
   const locked = !!data.issuedAt;
   const historical = data.historical === 'yes';
+  const automaticDueDate = data.dueDateMode === '30days';
   const language = invoiceLanguage(data.language); const t = invoiceText[language];
   const terms = invoiceTermsText(data, language);
   const daily = invoiceBillingMode(data.billingMode) === 'daily';
@@ -65,7 +66,27 @@ export default function InvoiceEditor({ data, contacts, onChange, onSelectClient
       <div className="invoice-grand-total"><span>{t.total}</span><strong>{displayCents(linesTotal(lines), language)}</strong></div>
       </>}
     </div>
-    <div className="invoice-dates">{input('issueDate', t.issueDate, '', { type: 'date', required:true })}{input('serviceDate', t.serviceDate, '', { type: 'date', required:!historical })}{input('dueDate', t.dueDate, '', { type: 'date', required:!historical })}</div>
+    <div className="invoice-dates">
+      {input('issueDate', t.issueDate, '', { type: 'date', required: true })}
+      {input('serviceDate', t.serviceDate, '', { type: 'date', required: !historical })}
+      {historical || locked ? input('dueDate', t.dueDate, '', { type: 'date', required: !historical }) : (
+        <fieldset className="invoice-due-choice">
+          <legend>{t.dueHeading}</legend>
+          <div className="invoice-due-options">
+            <label>
+              <input type="radio" name="invoice-due-mode" checked={automaticDueDate} onChange={() => onChange('dueDateMode', '30days')} />
+              {t.dueIn30Days}
+            </label>
+            <label>
+              <input type="radio" name="invoice-due-mode" checked={!automaticDueDate} onChange={() => onChange('dueDateMode', 'custom')} />
+              {t.customDueDate}
+            </label>
+          </div>
+          {automaticDueDate ? <output aria-label={t.dueDate}>{invoiceDate(data.dueDate, language)}</output>
+            : input('dueDate', t.dueDate, '', { type: 'date', required: true })}
+        </fieldset>
+      )}
+    </div>
     <div className="invoice-payment"><h4>{t.payment}</h4><p>{t.bankTransfer}{data.iban ? <><br/>IBAN : {data.iban}</> : <><br/>IBAN à renseigner dans « Mes coordonnées de facturation »</>}</p><p className="invoice-thanks">{t.thanks}</p></div>
     <details className="invoice-details"><summary>{t.conditions}</summary>{input('purchaseOrder', t.po, language === 'en' ? 'Optional reference' : 'Référence facultative')}<label className="invoice-field"><span>{t.discount}</span><input value={terms.discountTerms} onChange={e=>onChange('discountTerms',e.target.value)}/></label><label className="invoice-field"><span>{t.latePenalty}</span><textarea rows={3} value={terms.latePenalty} onChange={e=>onChange('latePenalty',e.target.value)}/></label><p>{terms.recoveryTerms}</p></details>
     </fieldset><div className="invoice-tracking">{data.paymentUnconfirmed === 'yes' && <p>État du paiement à confirmer.</p>}<label className="invoice-field"><span>{t.payment}</span><select value={data.paymentUnconfirmed === 'yes' ? 'À confirmer' : paymentStatus(data.status)} onChange={event => {if(event.target.value !== 'À confirmer') onChange('status', event.target.value);}}>{data.paymentUnconfirmed === 'yes' && <option value="À confirmer">{t.unconfirmed}</option>}<option value="Non payé">{t.unpaid}</option><option value="Payé">{t.paid}</option></select></label><label className="invoice-declaration"><input type="checkbox" checked={data.declared === 'yes'} onChange={event=>onChange('declared',event.target.checked ? 'yes' : '')}/><span>{t.declared}</span></label></div>

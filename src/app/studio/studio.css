@@ -133,6 +133,13 @@
 .invoice-service { border-top:1px solid #d7dbd3; margin-top:20px; padding-top:22px; }
 .invoice-service-row { display:grid; grid-template-columns:minmax(0,2fr) minmax(130px,1fr); gap:16px; }
 .invoice-dates,.invoice-tracking { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.invoice-due-choice { grid-column:1/-1; min-width:0; border:0; padding:0; margin:0 0 12px; }
+.invoice-due-choice legend { padding:0; margin-bottom:6px; color:#52604e; font-size:11px; font-weight:600; }
+.invoice-due-options { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:8px; }
+.invoice-due-options label { display:flex; align-items:center; gap:8px; padding:8px 12px; min-height:42px; border:1px solid #c5ccc0; border-radius:6px; background:#fff; color:#202a1e; font-size:14px; cursor:pointer; }
+.invoice-due-options label:has(input:checked) { border-color:#667d56; background:#e9efe4; }
+.invoice-due-options input { accent-color:#667d56; }
+.invoice-due-choice output { display:block; color:#52604e; font-size:13px; }
 .invoice-footnote { border-top:1px solid #d7dbd3; margin-top:20px; padding-top:15px; }
 @media(max-width:650px) { .invoice-document { padding:20px; } .invoice-parties,.invoice-service-row,.invoice-dates,.invoice-tracking { grid-template-columns:1fr; gap:4px; } .invoice-parties { gap:20px; } .invoice-field input,.invoice-field textarea,.invoice-field select { font-size:16px; } }
 .studio-profile { margin:0 0 18px; padding:16px; border:1px solid var(--s-line); border-radius:8px; background:var(--s-surface); }

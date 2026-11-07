@@ -21,6 +21,14 @@ export function followingInvoiceNumber(value: string): string | null {
   return p.prefix + String(p.number + 1).padStart(p.digits.length, '0');
 }
 export const parisDate = () => new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Paris', year:'numeric',month:'2-digit',day:'2-digit' }).format(new Date());
+export function dueDateIn30Days(issueDate: string): string {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(issueDate)) return '';
+  const date = new Date(issueDate + 'T00:00:00Z');
+  if (!Number.isFinite(date.getTime()) || date.toISOString().slice(0, 10) !== issueDate) return '';
+  date.setUTCDate(date.getUTCDate() + 30);
+  return date.getUTCFullYear() <= 9999 ? date.toISOString().slice(0, 10) : '';
+}
+
 export function invoiceIssueError(data: Record<string,string>): string | null {
   if (!data.seller || !data.sellerAddress || !/\bEI\b|entrepreneur individuel/i.test(data.seller)) return 'Renseigne le nom complet avec la mention EI et l’adresse professionnelle dans tes coordonnées.';
   if (!/^\d{14}$/.test((data.sellerSiret || '').replace(/\s/g,''))) return 'Vérifie ton SIRET dans tes coordonnées de facturation.';
