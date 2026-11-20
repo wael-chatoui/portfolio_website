@@ -12,3 +12,11 @@ CREATE TABLE IF NOT EXISTS studio_login_guard (
   locked_until timestamptz
 );
 INSERT INTO studio_login_guard (id) VALUES (1) ON CONFLICT DO NOTHING;
+-- Since 20 November 2026 the sign-in guard counts failures per client address (hashed) and globally.
+-- studio_login_guard above is no longer read by the application.
+CREATE TABLE IF NOT EXISTS studio_login_attempts (
+  key text PRIMARY KEY,
+  failures integer NOT NULL DEFAULT 0,
+  window_started timestamptz NOT NULL DEFAULT now(),
+  locked_until timestamptz
+);

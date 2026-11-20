@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { configured, cookieName, db, emailMatches, makeSession, passwordMatches, sameOrigin } from '@/lib/studio';
 import { analyticsExclusionCookie, analyticsPreferenceMaxAge } from '@/lib/analytics-policy';
+import { clearLoginFailures, ensureLoginGuardSchema, globalKey, loginClientKey, loginLocked, recordLoginFailure } from '@/lib/studio-login-guard';
 
 export const dynamic = 'force-dynamic';
 export async function POST(request: Request) {
@@ -10,19 +11,20 @@ export async function POST(request: Request) {
   try { const input = await request.json(); password = input.password; email = input.email; } catch { return NextResponse.json({ error: 'Requête invalide.' }, { status: 400 }); }
   if (typeof password !== 'string' || password.length > 1024 || typeof email !== 'string' || email.length > 254) return NextResponse.json({ error: 'Requête invalide.' }, { status: 400 });
   try {
+    const clientKey = loginClientKey(request.headers, process.env.STUDIO_SESSION_SECRET || '');
     const client = await db().connect();
     try {
+      await ensureLoginGuardSchema(client);
       await client.query('BEGIN');
-      const { rows } = await client.query('SELECT failures, locked_until FROM studio_login_guard WHERE id = 1 FOR UPDATE');
-      if (!rows.length) throw new Error('Login guard missing');
-      if (rows[0].locked_until && new Date(rows[0].locked_until).getTime() > Date.now()) {
+      await client.query('SELECT pg_advisory_xact_lock(736827105)');
+      if (await loginLocked(client, [clientKey, globalKey])) {
         await client.query('COMMIT'); return NextResponse.json({ error: 'Trop de tentatives. Réessaie dans 15 minutes.' }, { status: 429 });
       }
       if (!passwordMatches(password) || !emailMatches(email)) {
-        await client.query("UPDATE studio_login_guard SET failures = CASE WHEN locked_until IS NOT NULL AND locked_until <= now() THEN 1 ELSE failures + 1 END, locked_until = CASE WHEN (CASE WHEN locked_until IS NOT NULL AND locked_until <= now() THEN 1 ELSE failures + 1 END) >= 5 THEN now() + interval '15 minutes' ELSE NULL END WHERE id = 1");
+        await recordLoginFailure(client, clientKey);
         await client.query('COMMIT'); return NextResponse.json({ error: 'Adresse e-mail ou mot de passe incorrect.' }, { status: 401 });
       }
-      await client.query('UPDATE studio_login_guard SET failures = 0, locked_until = NULL WHERE id = 1');
+      await clearLoginFailures(client, clientKey);
       await client.query('COMMIT');
       const response = NextResponse.json({ ok: true });
       response.cookies.set(cookieName, makeSession(), { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'strict', path: '/', maxAge: 43200 });
