@@ -20,6 +20,13 @@ const fr = {
   addService:'+ Ajouter une prestation', removeService:'Supprimer cette prestation', paid:'Payé', unpaid:'Non payé', unconfirmed:'À confirmer', declared:'Déclaré', declarationHelp:'Indique uniquement si la déclaration a été effectuée.',
   namePlaceholder:'Ex. Création de site', descriptionPlaceholder:'Détail de la prestation',
   editPrompt:'Complète les informations puis crée la facture.', saved:'Facture enregistrée. Langue, paiement et déclaration restent modifiables.',
+  invoiceOptions:'Options de la facture', billingDetails:'Coordonnées et conditions', tracking:'Suivi de la facture', internalNotes:'Notes internes', notes:'Notes',
+  languageLabel:'Langue de la facture', languageHelp:'Les prestations et conditions personnalisées gardent le texte saisi.',
+  manualRecovery:'Compléter les coordonnées sur cette facture', manualRecoveryHelp:'La fiche du contact ne sera pas modifiée.',
+  sellerHelp:'Coordonnées à renseigner dans « Mes coordonnées de facturation »', ibanHelp:'IBAN à renseigner dans « Mes coordonnées de facturation »',
+  imported:'Facture importée', importPrompt:'Reprends le numéro et les montants du PDF original.', importSaved:'Facture enregistrée. Paiement et déclaration restent modifiables.',
+  importNumberHelp:'Numéro exact du document d’origine.', originalDownload:'Le téléchargement restitue le PDF original conservé.',
+  paymentConfirm:'État du paiement à confirmer.', missingContact:'Fiche client introuvable', addressWarning:'Adresse du siège : vérifie qu’elle convient pour la facturation.',
   numberHelp:'Proposé automatiquement, modifiable avant création.',
 };
 const en: Record<keyof typeof fr, string> = {
@@ -40,6 +47,13 @@ const en: Record<keyof typeof fr, string> = {
   addService:'+ Add a service', removeService:'Remove this service', paid:'Paid', unpaid:'Unpaid', unconfirmed:'To be confirmed', declared:'Declared', declarationHelp:'Records whether the declaration has been completed.',
   namePlaceholder:'e.g. Website development', descriptionPlaceholder:'Service details',
   editPrompt:'Complete the details, then create the invoice.', saved:'Invoice saved. Language, payment and declaration status can be updated.',
+  invoiceOptions:'Invoice options', billingDetails:'Billing details and terms', tracking:'Invoice tracking', internalNotes:'Internal notes', notes:'Notes',
+  languageLabel:'Invoice language', languageHelp:'Services and custom payment terms keep the text entered.',
+  manualRecovery:'Complete the billing details on this invoice', manualRecoveryHelp:'The contact record will not be changed.',
+  sellerHelp:'Complete your details in “My billing details”', ibanHelp:'Complete your IBAN in “My billing details”',
+  imported:'Imported invoice', importPrompt:'Copy the number and amounts from the original PDF.', importSaved:'Invoice saved. Payment and declaration status can be updated.',
+  importNumberHelp:'Exact number on the original document.', originalDownload:'Downloading returns the original PDF stored.',
+  paymentConfirm:'Payment status needs confirmation.', missingContact:'Client record not found', addressWarning:'Registered address: check it is suitable for billing.',
   numberHelp:'Suggested automatically; editable before creation.',
 };
 export const invoiceText = { fr, en };

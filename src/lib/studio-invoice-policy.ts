@@ -29,19 +29,49 @@ export function dueDateIn30Days(issueDate: string): string {
   return date.getUTCFullYear() <= 9999 ? date.toISOString().slice(0, 10) : '';
 }
 
-export function invoiceIssueError(data: Record<string,string>): string | null {
-  if (!data.seller || !data.sellerAddress || !/\bEI\b|entrepreneur individuel/i.test(data.seller)) return 'Renseigne le nom complet avec la mention EI et l’adresse professionnelle dans tes coordonnées.';
-  if (!/^\d{14}$/.test((data.sellerSiret || '').replace(/\s/g,''))) return 'Vérifie ton SIRET dans tes coordonnées de facturation.';
-  if (!data.client || !data.clientAddress) return 'Renseigne le nom et l’adresse de facturation du client dans sa fiche.';
-  if (!data.issueDate || !data.serviceDate || !data.dueDate) return 'Renseigne la date de facture, la date de prestation et l’échéance.';
-  for (const key of ['issueDate', 'serviceDate', 'dueDate']) {
-    const timestamp = Date.parse(data[key] + 'T12:00:00Z');
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(data[key]) || !Number.isFinite(timestamp) || new Date(timestamp).toISOString().slice(0, 10) !== data[key]) return 'Une des dates est invalide.';
+export type InvoiceFieldError = { field: string; message: string };
+
+export function invoiceIssueProblem(data: Record<string, string>): InvoiceFieldError | null {
+  if (!data.seller || !data.sellerAddress || !/\bEI\b|entrepreneur individuel/i.test(data.seller)) {
+    return { field: 'seller', message: 'Complète le nom avec la mention EI et l’adresse dans « Mes coordonnées de facturation ».' };
   }
-  if (data.dueDate < data.issueDate) return 'L’échéance ne peut pas précéder la date de facture.';
-  if (data.issueDate > parisDate()) return 'La date d’émission ne peut pas être dans le futur.';
-  if (data.taxRegime !== 'franchise' || Number((data.vat || '0').replace(',','.')) !== 0) return 'Ce modèle concerne les prestations en franchise de TVA.';
-  if (!data.iban || !data.discountTerms || !data.latePenalty || !data.recoveryTerms) return 'Complète les coordonnées bancaires et les conditions de paiement.';
-  if (linesTotal(linesForDraft(data)) === null || !data.amount) return 'Vérifie les prestations, quantités et prix.';
+  if (!/^\d{14}$/.test((data.sellerSiret || '').replace(/\s/g, ''))) {
+    return { field: 'sellerSiret', message: 'Vérifie ton SIRET dans « Mes coordonnées de facturation ».' };
+  }
+  if (!data.client) return { field: 'client', message: 'Renseigne le nom du client.' };
+  if (!data.clientAddress) {
+    return { field: 'clientAddress', message: data.clientId
+      ? 'Renseigne l’adresse de facturation dans la fiche de ce client.'
+      : 'Renseigne l’adresse de facturation du client.' };
+  }
+  const dates = {
+    issueDate: 'Vérifie la date de facture.',
+    serviceDate: 'Vérifie la date de prestation.',
+    dueDate: 'Vérifie la date d’échéance.',
+  };
+  for (const [field, message] of Object.entries(dates)) {
+    const value = data[field];
+    const timestamp = Date.parse(value + 'T12:00:00Z');
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(value) || !Number.isFinite(timestamp) || new Date(timestamp).toISOString().slice(0, 10) !== value) {
+      return { field, message };
+    }
+  }
+  if (data.dueDate < data.issueDate) return { field: 'dueDate', message: 'L’échéance ne peut pas précéder la date de facture.' };
+  if (data.issueDate > parisDate()) return { field: 'issueDate', message: 'La date d’émission ne peut pas être dans le futur.' };
+  if (data.taxRegime !== 'franchise' || Number((data.vat || '0').replace(',', '.')) !== 0) {
+    return { field: 'conditions', message: 'Ce modèle concerne les prestations en franchise de TVA.' };
+  }
+  if (!data.iban) return { field: 'iban', message: 'Renseigne l’IBAN dans « Mes coordonnées de facturation ».' };
+  if (!data.discountTerms || !data.latePenalty || !data.recoveryTerms) {
+    return { field: 'conditions', message: 'Complète les conditions de paiement.' };
+  }
+  if (linesTotal(linesForDraft(data)) === null || !data.amount) {
+    return { field: 'lines', message: 'Renseigne le nom, une quantité positive et un prix valide pour chaque ligne.' };
+  }
   return null;
+}
+
+// Retain the existing validator interface for callers that only need the message.
+export function invoiceIssueError(data: Record<string, string>): string | null {
+  return invoiceIssueProblem(data)?.message ?? null;
 }
